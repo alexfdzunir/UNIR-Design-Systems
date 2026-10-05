@@ -42,7 +42,7 @@ const content = [
       ['Prácticas', '+3.000 centros'],
     ],
   }),
-  `<div class="aem-section aem-section--flush" style="padding-bottom: 0">\n${anchors(['Descripción', 'Plan de Estudios', 'Salidas Profesionales', 'FAQ', 'Claustro', 'Admisión', 'Calidad'])}\n</div>`,
+  `<div class="aem-section aem-section--flush aem-page__anchors" style="padding-bottom: 0">\n${anchors(['Descripción', 'Plan de Estudios', 'Salidas Profesionales', 'FAQ', 'Claustro', 'Admisión', 'Calidad'])}\n</div>`,
   section(note('Estudia de manera paralela una de las siguientes menciones: Audición y Lenguaje, Pedagogía Terapéutica, Enseñanza de la Lengua Inglesa, Educación Musical, Educación Física, Educación Artística o Didáctica de la Religión.'), {
     id: 'seccion-1',
     heading: {

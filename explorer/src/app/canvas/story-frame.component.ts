@@ -15,12 +15,14 @@ import { cloneableArgs, type FrameMessage, type InspectMessage, type RenderMessa
 export class StoryFrameComponent {
   /** Minimum height in px (stage height or the story's own height). */
   readonly minHeight = input(240);
+  /** Pages: the iframe has the height of the visible stage and its own document scrolls (sticky and anchors work as in a real page). */
+  readonly fixed = input(false);
 
   protected readonly state = inject(ExplorerState);
   private readonly iframe = viewChild.required<ElementRef<HTMLIFrameElement>>('iframe');
   private readonly ready = signal(false);
   private readonly contentHeight = signal(0);
-  protected readonly height = computed(() => Math.max(this.contentHeight(), this.minHeight()));
+  protected readonly height = computed(() => (this.fixed() ? this.minHeight() : Math.max(this.contentHeight(), this.minHeight())));
 
   constructor() {
     const onMessage = (event: MessageEvent) => {

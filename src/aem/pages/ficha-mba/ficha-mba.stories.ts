@@ -43,7 +43,7 @@ const content = [
       ['Prácticas', '9 ECTS'],
     ],
   }),
-  `<div class="aem-section aem-section--flush" style="padding-bottom: 0">\n${anchors(['Descripción', 'Plan de Estudios', 'Salidas Profesionales', 'FAQ', 'Claustro', 'Admisión', 'Calidad'])}\n</div>`,
+  `<div class="aem-section aem-section--flush aem-page__anchors" style="padding-bottom: 0">\n${anchors(['Descripción', 'Plan de Estudios', 'Salidas Profesionales', 'FAQ', 'Claustro', 'Admisión', 'Calidad'])}\n</div>`,
   section('', {
     id: 'seccion-1',
     heading: {

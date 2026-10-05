@@ -122,7 +122,7 @@ const CODE_PANEL_KEY = 'po-explorer.code';
       <div class="po-canvas__sizer" [class.po-canvas__sizer--page]="isPage()" [style.width.px]="pageSize()?.width" [style.height.px]="pageSize()?.height">
         <div class="po-canvas__frame" [style.width]="frameWidth()" [style.transform]="pageSize() ? 'scale(' + scale() + ')' : null" [style.--po-page-scale]="scale()" #frame>
           <span class="po-canvas__width">{{ measuredWidth() }} px{{ isPage() && scale() < 1 ? ' · ' + scalePercent() + ' %' : '' }}</span>
-          <po-story-frame [minHeight]="frameMinHeight()" />
+          <po-story-frame [minHeight]="frameMinHeight()" [fixed]="isPage()" />
         </div>
       </div>
     </section>
@@ -344,7 +344,7 @@ export class CanvasComponent {
   protected readonly pageSize = computed(() =>
     this.isPage() ? { width: Math.floor((this.pageWidth() + 2) * this.scale()), height: Math.ceil((this.frameHeight() + 2) * this.scale()) } : null,
   );
-  protected readonly frameMinHeight = computed(() => this.isPage() ? 240 : Math.max(parseInt(this.state.selected().height ?? '240', 10) || 240, this.stageHeight()));
+  protected readonly frameMinHeight = computed(() => this.isPage() ? Math.max(240, Math.floor(this.stageHeight() / this.scale())) : Math.max(parseInt(this.state.selected().height ?? '240', 10) || 240, this.stageHeight()));
   protected readonly categoryLabel = computed(() => CATEGORIES.find((c) => c.id === this.state.selected().category)?.label ?? '');
   protected readonly frameWidth = computed(() => {
     if (this.isPage()) return `${this.pageWidth()}px`;

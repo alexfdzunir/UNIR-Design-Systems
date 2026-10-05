@@ -98,6 +98,14 @@ export class FrameRootComponent {
 
     // AEM page templates: a link to another template opens it in the explorer (new tab and modifiers keep the browser default)
     const onClick = (event: MouseEvent) => {
+      // `<base href="/">` would send `#section` links to the explorer root: scroll to the section here instead
+      const anchor = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+      const hash = anchor?.getAttribute('href') ?? '';
+      if (anchor && hash.length > 1 && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+        event.preventDefault();
+        document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
       const link = (event.target as Element | null)?.closest<HTMLElement>('[data-po-page]');
       if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
@@ -119,6 +127,8 @@ export class FrameRootComponent {
       document.documentElement.classList.toggle('po-dark', request.scheme === 'dark');
       // AEM Portales: its own dark mode (semantic tokens on their inverse values)
       document.documentElement.classList.toggle('aem-dark', request.scheme === 'dark' && this.entry()?.ds === 'aem');
+      // Pages scroll inside the frame (the explorer gives them the height of the stage)
+      document.documentElement.classList.toggle('po-frame-scroll', this.entry()?.category === 'aem-pages');
       this.scheduleTokens();
       this.scheduleMeasure();
     });

@@ -66,6 +66,16 @@
 @media (max-width: 1023.98px) {
   .aem-page__aside-layout { grid-template-columns: minmax(0, 1fr); }
 }
+/* Anchor menu of the page: sticks to the top over a white band; the sections stop below it when reached from a link */
+.aem-page__anchors { position: sticky; top: 0; z-index: 15; background: var(--aem-color-background-primary); }
+/* The section already gives the horizontal padding: the menu takes the 1280px content column of the other sections */
+.aem-page__anchors > .aem-anchor-menu { max-width: 80rem; margin: 0 auto; padding-inline: 0; }
+/* From 1920px: wider form (400px) and a 980px content column in every section of the page */
+@media (min-width: 1920px) {
+  .aem-page__aside-layout { grid-template-columns: minmax(0, 1fr) 25rem; }
+  .aem-page__aside-layout :is(.aem-hero__inner, .aem-section__inner, .aem-calculator__inner, .aem-anchor-menu, .aem-event-bar .aem-share) { max-width: 61.25rem; }
+}
+.aem-page__aside-layout main [id] { scroll-margin-top: 4.375rem; }
 
 /* Article (news page): lead paragraph, figure with caption and body text in the 864px column */
 .aem-article { display: flex; flex-direction: column; gap: var(--aem-unit-24); max-width: 54rem; }

@@ -71,6 +71,11 @@ html.po-frame-doc {
   overflow: hidden;
 }
 
+/* Page templates: the frame has the height of the stage and scrolls itself */
+html.po-frame-doc.po-frame-scroll {
+  overflow: auto;
+}
+
 /* Shell: navbar on top of catalogue | stage | controls. The side columns collapse to 0. */
 .po-shell {
   --po-catalog-track: var(--po-sidebar-width);

@@ -21,6 +21,10 @@
   pointer-events: none;
 }
 
+/* Dark: the band steps down to blue 200 over the blue 100 page and the curve dims, so the hero does not glare */
+.aem-dark .aem-brand { background-color: var(--aem-color-blue-200); }
+.aem-dark .aem-brand::before { opacity: 0.55; }
+
 /* Image placeholder (Figma grey with the image icon) */
 .aem-placeholder {
   display: grid;

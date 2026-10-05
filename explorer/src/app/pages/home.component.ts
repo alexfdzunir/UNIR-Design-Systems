@@ -132,9 +132,17 @@ const REPO_URL = 'https://github.com/alexfdzunir/UNIR-Design-Systems';
 
     /* Decorative mosaic of glass tiles with DS icons; alternate columns are offset and every tile floats */
     /* AEM Portales: flat blue 400 with the brand curve on the right, no grid */
-    .po-hero--aem,
-    :host-context(html.po-dark) .po-hero--aem {
+    .po-hero--aem {
       background: #0a4ec2;
+    }
+
+    /* Dark: blue 200 over the blue 100 page, curve dimmed (as .aem-dark .aem-brand) */
+    :host-context(html.po-dark) .po-hero--aem {
+      background: #052761;
+    }
+
+    :host-context(html.po-dark) .po-hero--aem .po-hero__curve {
+      opacity: 0.55;
     }
 
     .po-hero--aem::before {

@@ -6,7 +6,7 @@ import { attr, is } from '../../figma/helpers'
 
 const instance = figma.selectedInstance
 const horizontal = is(instance, 'Direction', 'Horizontal')
-const align = instance.getEnum('Align', { Left: undefined, Right: 'right', Alterned: 'alternate', Opposite: 'right', Bottom: 'bottom', Top: undefined })
+const align = instance.getEnum('Align', { Left: undefined, Right: 'right', Alternate: 'alternate', Opposite: 'right', Bottom: 'bottom', Top: undefined })
 
 const example = figma.code`<p-timeline [value]="events"${attr('layout', horizontal ? 'horizontal' : undefined)}${attr('align', align)}>
   <ng-template #content let-event>

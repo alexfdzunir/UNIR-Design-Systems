@@ -5,7 +5,7 @@ import figma from 'figma'
 import { attr, is, text } from '../../figma/helpers'
 
 const instance = figma.selectedInstance
-const right = is(instance, 'orientation', 'right')
+const right = is(instance, 'Orientation', 'right')
 const group = is(instance, 'Group', 'Yes')
 const author = group && !right && instance.getBoolean('Name') ? text(instance, 'Username') ?? 'Nombre' : undefined
 const time = instance.getBoolean('Time') ? text(instance, 'Timestamp') ?? '10:35' : undefined

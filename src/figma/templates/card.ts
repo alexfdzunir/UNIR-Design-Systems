@@ -37,8 +37,8 @@ const list = (values: string[]) => (values.length ? `[${values.map(quote).join('
 
 // Shared by the five DS card sets: one `prime-one-card` with every block that is visible in the instance
 export function cardTemplate(instance: InstanceHandle, kind: CardKind) {
-  const blocks = instance.findLayers((node) => node.name === 'card-content').filter(isInstance)
-  const ofType = (type: string, size?: string) => blocks.filter((b) => prop(b, 'type') === type && (!size || prop(b, 'size') === size))
+  const blocks = instance.findLayers((node) => node.name === 'card-content-text').filter(isInstance)
+  const ofType = (type: string, size?: string) => blocks.filter((b) => prop(b, 'Type') === type && (!size || prop(b, 'Size') === size))
   const first = (type: string, layer: string) => {
     const block = ofType(type)[0]
     return block ? text(block, layer) : undefined

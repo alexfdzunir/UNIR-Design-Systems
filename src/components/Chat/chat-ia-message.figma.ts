@@ -5,7 +5,7 @@ import figma from 'figma'
 import { is } from '../../figma/helpers'
 
 const instance = figma.selectedInstance
-const right = is(instance, 'orientation', 'right')
+const right = is(instance, 'Orientation', 'right')
 
 const example = figma.code`<prime-one-chat-ia-message${right ? ' orientation="right"' : ''}${!right && instance.getBoolean('Actionbar') ? ' [showActions]="true" (actionClick)="onAction($event)"' : ''}${is(instance, 'Display', 'mobile') ? ' [mobile]="true"' : ''}>{{ message.text }}</prime-one-chat-ia-message>`
 const imports = ["import { PrimeOneChatIaMessage } from 'prime-one-ds';"]

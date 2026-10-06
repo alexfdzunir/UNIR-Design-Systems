@@ -11,7 +11,7 @@ const flags = [
   instance.getBoolean('Archives') ? ' [attachments]="files"' : '',
   instance.getBoolean('Plus Button') ? '' : ' [showAttach]="false"',
   is(instance, 'Audio', 'Yes') ? ' [recording]="true" recordingTime="0:01"' : '',
-  is(instance, 'Trascribing', 'Yes') ? ' [transcribing]="true"' : '',
+  is(instance, 'Transcribing', 'Yes') ? ' [transcribing]="true"' : '',
   is(instance, P.nestedBlocked, 'Yes') ? ' [disabled]="true"' : '',
   is(instance, 'Size', 'Mobile') ? ' [mobile]="true"' : '',
 ].join('')

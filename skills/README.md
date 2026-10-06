@@ -14,6 +14,12 @@ Skills para agentes de código (Claude y Codex) que trabajan con Figma y con el 
 
 Las skills que leen o escriben en Figma necesitan el servidor MCP de Figma conectado en el agente.
 
+### Informe de `component-audit`
+
+Además del Markdown, `component-audit` genera un informe HTML con la plantilla [`report-template.html`](component-audit/report-template.html): score de salud con su estado (crítico, mejorable o saludable), resumen, problemas por gravedad, tablas con ids de Figma y recomendaciones, en modo claro y oscuro. Ejemplo: [auditoría de PrimeOne](../reports/figma-audit/2026-10-06-primeone.html).
+
+![Informe HTML de component-audit: score de salud en estado crítico, cifras de la librería y resumen ejecutivo](../docs/screenshots/component-audit-report.png)
+
 ## Instalación en Claude
 
 ### Claude Code

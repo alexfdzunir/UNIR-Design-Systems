@@ -1,0 +1,1362 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auditoría de librería Figma</title>
+  <!-- Proeduca Sans: ruta relativa a src/fonts del repo PrimeOne-DS. Fuera del repo cae a la fuente del sistema. -->
+  <link rel="stylesheet" href="../../src/fonts/proeduca-sans.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+  <style>
+    /* Paleta del tema Estudiantes (src/theme/presets.ts): BLUE_UNIR y SURFACE_ESTUDIANTES */
+    :root {
+      --primary-50: #f9fcff; --primary-100: #e7effe; --primary-200: #cfdffc; --primary-300: #9ec0fa;
+      --primary-400: #6ea0f7; --primary-500: #3d81f5; --primary-600: #0d61f2; --primary-700: #0a4ec2;
+      --primary-800: #083a91; --primary-900: #052761; --primary-950: #031330;
+      --surface-0: #ffffff; --surface-50: #fcfcfe; --surface-100: #f7f8fd; --surface-200: #eff2fb;
+      --surface-300: #ebeefa; --surface-400: #bbc1d8; --surface-500: #848eae; --surface-600: #5a6481;
+      --surface-700: #4a5268; --surface-800: #383c48; --surface-900: #22252f; --surface-950: #181c26;
+
+      --bg: var(--surface-50);
+      --card: var(--surface-0);
+      --border: var(--surface-300);
+      --text: var(--surface-900);
+      --muted: var(--surface-600);
+      --accent: var(--primary-600);
+      --code-bg: var(--surface-200);
+      --hero-a: var(--primary-800); --hero-b: var(--primary-600); --hero-c: var(--primary-500);
+
+      --sev-critical: #dc2626; --sev-critical-bg: #fef2f2;
+      --sev-warning: #b45309; --sev-warning-bg: #fffbeb;
+      --sev-info: var(--primary-700); --sev-info-bg: var(--primary-100);
+      --sev-ok: #15803d; --sev-ok-bg: #f0fdf4;
+
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font: 'Proeduca Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+
+    html.dark {
+      --bg: var(--surface-950);
+      --card: var(--surface-900);
+      --border: var(--surface-800);
+      --text: var(--surface-100);
+      --muted: var(--surface-400);
+      --accent: var(--primary-400);
+      --code-bg: var(--surface-800);
+      --hero-a: var(--primary-950); --hero-b: var(--primary-900); --hero-c: var(--primary-800);
+      --sev-critical: #f87171; --sev-critical-bg: rgb(220 38 38 / 0.16);
+      --sev-warning: #fbbf24; --sev-warning-bg: rgb(217 119 6 / 0.16);
+      --sev-info: var(--primary-300); --sev-info-bg: rgb(61 129 245 / 0.18);
+      --sev-ok: #4ade80; --sev-ok-bg: rgb(22 163 74 / 0.16);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); }
+    code {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: var(--code-bg);
+      font-family: var(--mono);
+      font-size: 0.8125em;
+      overflow-wrap: anywhere;
+    }
+
+    /* Hero: misma banda de marca que la home del explorador */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 20%, rgb(255 255 255 / 0.18), transparent 45%),
+        radial-gradient(circle at 10% 110%, rgb(255 255 255 / 0.1), transparent 40%),
+        linear-gradient(135deg, var(--hero-a) 0%, var(--hero-b) 60%, var(--hero-c) 100%);
+      color: #fff;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to right, transparent 10%, #000 75%);
+    }
+    .hero__inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 48px;
+      align-items: center;
+      width: min(100%, 1200px);
+      margin: 0 auto;
+      padding: 56px 32px 40px;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border: 1px solid rgb(255 255 255 / 0.3);
+      border-radius: 999px;
+      background: rgb(255 255 255 / 0.1);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .hero h1 {
+      margin: 20px 0 12px;
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+    .hero h1 span { display: block; font-weight: 400; opacity: 0.85; }
+    .hero__meta { margin: 0; opacity: 0.9; }
+    .hero__meta a { color: #fff; }
+    .hero__actions { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border: 1px solid rgb(255 255 255 / 0.4);
+      border-radius: 999px;
+      background: transparent;
+      color: #fff;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .cta:hover { background: rgb(255 255 255 / 0.12); }
+    .cta--solid { background: #fff; color: var(--primary-700); border-color: transparent; }
+    .cta--solid:hover { background: var(--primary-50); }
+    .cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+    /* Anillo de score */
+    .ring { position: relative; width: 168px; height: 168px; }
+    .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring circle { fill: none; stroke-width: 12; }
+    .ring__track { stroke: rgb(255 255 255 / 0.18); }
+    .ring__value { stroke: #fff; stroke-linecap: round; }
+    .ring__label {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      text-align: center;
+    }
+    .ring__label strong { font-size: 2.75rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+    .ring__label span { font-size: 0.75rem; opacity: 0.8; }
+
+    .figures {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 48px;
+      margin: 40px 0 0;
+      padding-top: 24px;
+      border-top: 1px solid rgb(255 255 255 / 0.2);
+    }
+    .figures div { display: flex; flex-direction: column-reverse; }
+    .figures dt { font-size: 0.8125rem; opacity: 0.75; }
+    .figures dd { margin: 0; font-size: 1.75rem; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+
+    /* Cuerpo: índice lateral + contenido */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 40px;
+      width: min(100%, 1200px);
+      margin: 0 auto;
+      padding: 40px 32px 64px;
+    }
+    .toc { position: sticky; top: 24px; align-self: start; }
+    .toc ol { margin: 0; padding: 0; list-style: none; }
+    .toc a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      font-size: 0.875rem;
+      text-decoration: none;
+    }
+    .toc a:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text); }
+    .toc .count { margin-left: auto; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    main { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+    .card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      scroll-margin-top: 16px;
+    }
+    .card h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .card h3 { margin: 24px 0 8px; font-size: 1rem; font-weight: 600; }
+    .card > p, .card .intro { margin: 0 0 12px; color: var(--muted); }
+    .icon {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--sev, var(--accent)) 12%, transparent);
+      color: var(--sev, var(--accent));
+      font-size: 1.25rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--sev-bg, var(--sev-info-bg));
+      color: var(--sev, var(--sev-info));
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .sev-critical { --sev: var(--sev-critical); --sev-bg: var(--sev-critical-bg); }
+    .sev-warning { --sev: var(--sev-warning); --sev-bg: var(--sev-warning-bg); }
+    .sev-info { --sev: var(--sev-info); --sev-bg: var(--sev-info-bg); }
+    .sev-ok { --sev: var(--sev-ok); --sev-bg: var(--sev-ok-bg); }
+    .card h2 .badge { margin-left: auto; }
+
+    /* Resumen */
+    .summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 16px 0 0; padding: 0; list-style: none; }
+    .summary li {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--sev);
+      border-radius: var(--radius-sm);
+    }
+    .summary i { color: var(--sev); font-size: 1.25rem; line-height: 1.3; }
+
+    /* Barras del score */
+    .metrics { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+    .metric__head { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
+    .metric__head span:last-child { font-variant-numeric: tabular-nums; }
+    .bar { height: 8px; margin: 6px 0 4px; border-radius: 999px; background: var(--code-bg); overflow: hidden; }
+    .bar > span { display: block; height: 100%; border-radius: inherit; background: var(--sev); }
+    .metric p { margin: 0; color: var(--muted); font-size: 0.8125rem; }
+    .score-total {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    .score-total strong { color: var(--text); font-variant-numeric: tabular-nums; }
+
+    /* Tablas */
+    .table-wrap { margin: 8px 0 0; overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    th, td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+    th {
+      background: color-mix(in srgb, var(--accent) 5%, var(--card));
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    ul.plain { margin: 8px 0 0; padding-left: 20px; }
+    ul.plain li { margin: 4px 0; }
+    .note {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0 0;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--accent) 6%, transparent);
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    .note i { color: var(--accent); font-size: 1.125rem; line-height: 1.3; }
+
+    .recs { counter-reset: rec; margin: 16px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .recs li { counter-increment: rec; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; }
+    .recs li::before {
+      content: counter(rec);
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .recs strong { display: block; }
+    .recs span { color: var(--muted); font-size: 0.875rem; }
+
+    footer {
+      width: min(100%, 1200px);
+      margin: 0 auto;
+      padding: 24px 32px 48px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 1023.98px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .toc { display: none; }
+    }
+    @media (max-width: 767.98px) {
+      .hero__inner { grid-template-columns: minmax(0, 1fr); padding: 40px 16px 32px; }
+      .ring { width: 132px; height: 132px; margin-top: 24px; }
+      .figures { gap: 16px 28px; margin-top: 28px; }
+      .layout { padding: 24px 16px 40px; }
+      .card { padding: 18px; }
+      footer { padding: 24px 16px 40px; }
+    }
+    @media print {
+      .toc, .hero__actions { display: none; }
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__inner">
+      <div>
+        <span class="hero__eyebrow"><i class="ph ph-magnifying-glass" aria-hidden="true"></i> <span id="eyebrow"></span></span>
+        <h1 id="title"></h1>
+        <p class="hero__meta" id="meta"></p>
+        <div class="hero__actions">
+          <a class="cta cta--solid" id="figma-link" target="_blank" rel="noopener"><i class="ph ph-figma-logo" aria-hidden="true"></i> Abrir en Figma</a>
+          <button type="button" class="cta" id="theme-toggle"><i class="ph ph-moon" aria-hidden="true"></i> <span>Modo oscuro</span></button>
+        </div>
+      </div>
+      <div class="ring" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><circle class="ring__track" cx="60" cy="60" r="52" /><circle class="ring__value" id="ring" cx="60" cy="60" r="52" /></svg>
+        <div class="ring__label"><strong id="score"></strong><span>de 100</span></div>
+      </div>
+      <dl class="figures" id="figures"></dl>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Índice">
+      <p class="eyebrow">Contenido</p>
+      <ol id="toc"></ol>
+    </nav>
+    <main id="main"></main>
+  </div>
+
+  <footer id="footer"></footer>
+
+  <!--
+    Datos del informe. Es lo único que cambia entre auditorías (ver SKILL.md, sección "Reporte HTML").
+    En los textos, `código` se pinta como <code> y **texto** como <strong>.
+  -->
+  <script type="application/json" id="audit-data">
+{
+  "file": {
+    "name": "Design system - PrimeOne",
+    "url": "https://www.figma.com/design/lWpcnToQVkqEqFifm67QaG/Design-system---PrimeOne",
+    "key": "lWpcnToQVkqEqFifm67QaG"
+  },
+  "date": "2026-10-06",
+  "scope": "Librería completa (140 páginas, 119 con contenido)",
+  "figures": [
+    {
+      "label": "Componentes",
+      "value": "331"
+    },
+    {
+      "label": "Component sets",
+      "value": "282"
+    },
+    {
+      "label": "Instancias",
+      "value": "29.926"
+    },
+    {
+      "label": "Críticos",
+      "value": "8"
+    },
+    {
+      "label": "Huérfanos",
+      "value": "20"
+    },
+    {
+      "label": "Variables",
+      "value": "3.613"
+    }
+  ],
+  "score": {
+    "total": 18,
+    "base": 58,
+    "penalty": 40,
+    "criticals": 8,
+    "metrics": [
+      {
+        "name": "Naming consistente",
+        "weight": 25,
+        "points": 15,
+        "reason": "Unos 60 de 331 componentes con algún problema: duplicados, `Property 1`, erratas, mezcla de idioma y de casing."
+      },
+      {
+        "name": "Sin huérfanos",
+        "weight": 20,
+        "points": 15,
+        "reason": "20 sets sin instancias (6%), más las páginas de \"No usados\" sin archivar."
+      },
+      {
+        "name": "Variantes completas",
+        "weight": 25,
+        "points": 14,
+        "reason": "Botones sin foco, ítems de menú sin disabled, wrappers de formulario sin invalid ni disabled y tamaños sin una escala común."
+      },
+      {
+        "name": "Sin duplicados",
+        "weight": 15,
+        "points": 5,
+        "reason": "126 de 129 effect styles duplicados, 6 pares de text styles idénticos y 1 primitiva duplicada."
+      },
+      {
+        "name": "Organización por páginas",
+        "weight": 15,
+        "points": 9,
+        "reason": "La estructura por página es consistente, pero hay notas de trabajo en los nombres, páginas vacías y espacios sobrantes."
+      }
+    ]
+  },
+  "summary": [
+    {
+      "severity": "ok",
+      "text": "La base es sólida: kebab-case mayoritario, prefijo `_` para piezas internas, colores 100% en variables (0 paint styles) y temas por modos de variable."
+    },
+    {
+      "severity": "critical",
+      "text": "**8 nombres duplicados exactos** entre component sets. `button-small` de InputChat choca con el del núcleo."
+    },
+    {
+      "severity": "critical",
+      "text": "**Effect styles casi inservibles**: 126 de 129 duplicados, 118 sin uso y 71 sombras invisibles (alpha 0)."
+    },
+    {
+      "severity": "warning",
+      "text": "**Variables sin scopes**: 2.999 de 3.613 con `ALL_SCOPES` y casi ninguna con descripción."
+    },
+    {
+      "severity": "warning",
+      "text": "**Estados incompletos**: `button` y sus 5 variantes no tienen foco; los ítems de menú y tabs no tienen disabled."
+    },
+    {
+      "severity": "warning",
+      "text": "**Componentes custom** con naming mixto: PascalCase, espacios, español e inglés y `Property 1`."
+    },
+    {
+      "severity": "info",
+      "text": "**20 sets huérfanos** y 30 páginas de \"No usados\" que siguen publicándose, con 3 backups de Button de 655 variantes cada uno."
+    }
+  ],
+  "sections": [
+    {
+      "id": "criticos",
+      "title": "Problemas críticos",
+      "icon": "warning-octagon",
+      "severity": "critical",
+      "count": 8,
+      "intro": "Nombres duplicados exactos entre component sets. En el panel de assets aparecen dos entradas iguales y es fácil insertar la equivocada.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Componente",
+            "Ubicaciones (id)",
+            "Acción"
+          ],
+          "rows": [
+            [
+              "`button-small`",
+              "Button `7593:168546` (núcleo) e InputChat `13549:34825`",
+              "Renombrar el de InputChat a `_inputchat-button-small`; además usa `Property 1`."
+            ],
+            [
+              "`card-content`",
+              "Card `13484:21907` y Card `16944:44255`",
+              "Renombrar el segundo (tipografía de contenido) a `card-content-text` o similar."
+            ],
+            [
+              "`_stepper-step-header`",
+              "Stepper `6978:4615` y `12431:106006`",
+              "`12431:106006` no tiene instancias: eliminar."
+            ],
+            [
+              "`Logos`",
+              "Logos `14026:89536` y `18265:47810`",
+              "`18265:47810` no tiene instancias: eliminar."
+            ],
+            [
+              "`sidebar-menu items`",
+              "Menubar (Foundations) `14399:23662` y Sidebar `14292:22439`",
+              "Unificar o renombrar a `menubar-menu-item` / `sidebar-menu-item`."
+            ],
+            [
+              "`card-inputchat-integrada`",
+              "Chatbox `17992:163163` e InputChat `17487:39128`",
+              "Unificar: las variantes `Item` solo difieren en `Error`."
+            ],
+            [
+              "`fileupload-content`",
+              "FIleupload `14270:60949` y Perfil `14287:75258`",
+              "Renombrar el de Perfil (1 variante `Property 1=Title`) a `_perfil-content`."
+            ],
+            [
+              "`scrollpanel-bar`",
+              "ScrollPanel `6535:10522` y DataTable `13931:49180`",
+              "Pasar las instancias al de ScrollPanel y borrar la copia de DataTable."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "naming",
+      "title": "Advertencias de naming",
+      "icon": "text-aa",
+      "severity": "warning",
+      "count": 60,
+      "intro": "Unos 60 componentes rompen la convención mayoritaria del archivo: kebab-case en minúscula y en inglés.",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Propiedades de variante genéricas (`Property 1`)",
+          "columns": [
+            "Componente",
+            "Página",
+            "Valores"
+          ],
+          "rows": [
+            [
+              "`Component 94` `16727:34245`",
+              "Timeline",
+              "Default, step1 complete... (nombre por defecto, sin instancias)"
+            ],
+            [
+              "`_stepper-step-header` `12431:106006`",
+              "Stepper",
+              "Disabled, Past, Active"
+            ],
+            [
+              "`fileupload-content` `14270:60949`",
+              "FIleupload",
+              "Title, Description"
+            ],
+            [
+              "`fileupload-content` `14287:75258`",
+              "Perfil",
+              "Title"
+            ],
+            [
+              "`Menubar-menuitems-text`",
+              "Menubar (Foundations)",
+              "Default"
+            ],
+            [
+              "`SkeletonText`",
+              "Skeleton Text",
+              "1, 2, 3, 4"
+            ],
+            [
+              "`Bell-notification-mobile`",
+              "Navbar",
+              "Default, Pressed, Active"
+            ],
+            [
+              "`fila-eventos`",
+              "Agenda",
+              "Default, Variant2, Variant3"
+            ],
+            [
+              "`button-small` `13549:34825`",
+              "InputChat",
+              "Idle, Active, Hover"
+            ],
+            [
+              "`tapbar`",
+              "Tap Bar",
+              "Default (1 sola variante: debería ser un componente simple)"
+            ],
+            [
+              "`Title`",
+              "Tareas+",
+              "Default, Variant2"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Valores genéricos y erratas",
+          "columns": [
+            "Componente",
+            "Problema",
+            "Corrección"
+          ],
+          "rows": [
+            [
+              "`inputchat-button-small`",
+              "`State: State3, State4`",
+              "Nombrar los estados reales"
+            ],
+            [
+              "`Country dependency`",
+              "`State: State4, State5, State6`",
+              "Nombrar o eliminar"
+            ],
+            [
+              "`skaleton`",
+              "Nombre del set",
+              "`skeleton` (ya existe `skeleton` suelto: fusionar)"
+            ],
+            [
+              "`InputChat`",
+              "Prop `Trascribing`",
+              "`Transcribing`"
+            ],
+            [
+              "`Chatbox-box`, `agenda-month-cell`",
+              "`higlight` / `Higlight`",
+              "`Highlight`"
+            ],
+            [
+              "`fileupload-centraldocs`",
+              "`Succes`",
+              "`Success`"
+            ],
+            [
+              "`fileupload-items`",
+              "`Erro`",
+              "`Error`"
+            ],
+            [
+              "`timeline`",
+              "`Alterned`",
+              "`Alternate`"
+            ],
+            [
+              "`datatable-toolbar`",
+              "Prop `Colapsed`",
+              "`Collapsed`"
+            ],
+            [
+              "`steppermobile-cercle`",
+              "Nombre",
+              "`steppermobile-circle`"
+            ],
+            [
+              "`tooltip-tooltip`",
+              "`Direction: U`",
+              "Eliminar o `Up`"
+            ],
+            [
+              "`Logo MIU`",
+              "`Tag horizontal: yes, n, No`",
+              "`Yes, No`"
+            ],
+            [
+              "`stepper-step-number`",
+              "Prop `Disable`",
+              "`Disabled`"
+            ],
+            [
+              "Página `FIleupload`",
+              "Mayúscula",
+              "`FileUpload`"
+            ]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Casing inconsistente",
+          "items": [
+            "PascalCase o mayúscula inicial: `InputRGPD`, `InputChat`, `Navbar`, `Menubar`, `Sidebar`, `SkeletonText`, `Actionbutton`, `Chatbox-box`, `Chatbox-IA`, `Chatbar-Voice Waveform`, `Chatbar-button-conversation`, `Menubar-menuitems-text`, `Bell-notification-mobile`, `History Item`, `Status`, `Title`, `Celda`, `Bottom Bar Editor`, `Country dependency`, `Logo *`.",
+            "Espacios dentro del nombre: `sidebar-menu items`, `History Item`, `Chatbar-Voice Waveform`, `Bottom Bar Editor`, `Country dependency disabled`.",
+            "snake_case: `_question_posibilidades`, `_question_radio_true_false`, `_question_splitbutton`, `progressspinner_prime`, `tapbar_icon`.",
+            "Props en minúscula frente a la mayoría capitalizada: `orientation`, `display`, `color`, `type`, `size` (Chatbox, Agenda, `card-content` `16944:44255`, `inputchat-button-small`).",
+            "Emojis en props (`⚙️ State`, `🚫 Disabled`) solo en los inputs de formulario y en Button."
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Mezcla de idiomas",
+          "items": [
+            "`Celda` (`Inicio: Lunes...Domingo`), `fila-eventos`, `_question_posibilidades`, `_question_respuestas_personalizadas`.",
+            "`_vencimiento` (`Estado`), `_tag-prio` (`Prioridad`), `_task-type` (`Tipo`), `question` (`Rol`, `Tipo`, `Estado`).",
+            "`agenda-calendar-card` (`Color: Verde, Morado`), `agenda-event-card` (`Cancelado, Pendiente, Sin evento`), `agenda` (`Filtro`), `Bottom Bar Editor` (`Tipo`), `Logos` (`Prop: Negro`)."
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Valores sin escala común",
+          "items": [
+            "Booleanos: `False/True` (núcleo), `No/Yes` (custom), `Off/On` (InputRGPD, Topbar, Logos), `yes/no` en minúscula (Logo MIU).",
+            "Tamaños: `Normal/Small/Large`, `md/sm`, `MD/SM`, `M/S`, `S/M/L`, `XS..XL`, `Medium/Small`, `Default/Small/Large`, `Default/Double`, y `Desktop/Mobile` usado como `Size`.",
+            "Estado base: `Idle` en unos, `Default` en otros y `Enabled` en `media-button`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "estilos",
+      "title": "Estilos duplicados",
+      "icon": "copy",
+      "severity": "critical",
+      "count": 133,
+      "intro": "Comparación por valor, no por nombre. Los effect styles son los generados por el plugin de PrimeOne: si no se usan en componentes, se pueden borrar casi todos sin impacto.",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Effect styles (126 de 129 en grupos duplicados, 118 sin uso)",
+          "columns": [
+            "Grupo",
+            "Nº",
+            "Valor",
+            "Acción"
+          ],
+          "num": [
+            1
+          ],
+          "rows": [
+            [
+              "`*/focus/ring/shadow`",
+              "71",
+              "Drop shadow 0/0/0, negro alpha 0 (invisible)",
+              "Eliminar: el foco no se representa con sombra en Figma"
+            ],
+            [
+              "`*/overlay/shadow` y sombras de popups",
+              "22",
+              "0 2 4 -2 + 0 4 6 -1, negro 10%",
+              "Un solo `overlay/shadow`"
+            ],
+            [
+              "`*/shadow` de campos",
+              "12",
+              "0 1 2, `#121217` 5%",
+              "Un solo `form/field/shadow`"
+            ],
+            [
+              "`dialog`, `drawer`, `overlay/modal`",
+              "3",
+              "0 8 10 -6 + 0 20 25 -5",
+              "Un solo `overlay/modal/shadow`"
+            ],
+            [
+              "`message/*` y `toast/*` por severidad",
+              "12",
+              "0 4 8, casi negro 4%",
+              "Un estilo compartido (los tonos difieren en 1-2 puntos de RGB)"
+            ],
+            [
+              "`button/raised` y `splitbutton/raised`",
+              "2",
+              "Idéntico",
+              "Uno"
+            ],
+            [
+              "`tabview/nav/button` y `tabs/nav/button`",
+              "2",
+              "Idéntico",
+              "Eliminar `tabview` (legacy)"
+            ],
+            [
+              "`stepper/step/number` y `timeline/.../inset`",
+              "2",
+              "Idéntico",
+              "Uno"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Text styles (6 pares idénticos)",
+          "columns": [
+            "Estilo A",
+            "Estilo B",
+            "Valor",
+            "Uso A / B"
+          ],
+          "rows": [
+            [
+              "`Body/Body M Medium`",
+              "`Label/Label L Medium`",
+              "Medium 16/20",
+              "28 / 1808"
+            ],
+            [
+              "`Body/Body M Regular`",
+              "`Label/Label L Regular`",
+              "Regular 16/20",
+              "3 / 253"
+            ],
+            [
+              "`Body/Body S Medium`",
+              "`Label/Label M Medium`",
+              "Medium 14/20",
+              "27 / 1"
+            ],
+            [
+              "`Body/Body S Regular`",
+              "`Label/Label M Regular`",
+              "Regular 14/20",
+              "19 / 426"
+            ],
+            [
+              "`Body/Body XS Medium`",
+              "`Label/Label S Medium`",
+              "Medium 12/16",
+              "0 / 1004"
+            ],
+            [
+              "`Body/Body XS Regular`",
+              "`Label/Label S Regular`",
+              "Regular 12/16",
+              "13 / 12"
+            ]
+          ]
+        },
+        {
+          "type": "note",
+          "text": "Puede ser una decisión semántica (body frente a label); entonces conviene documentarla en la descripción del estilo. `Body/* Bold` usa el peso SemiBold. Sin uso: `Headline-1`, `Headline-2`, `Body XS Medium`."
+        },
+        {
+          "type": "table",
+          "title": "Variables",
+          "columns": [
+            "Colección",
+            "Variables",
+            "Con ALL_SCOPES",
+            "Sin descripción",
+            "Duplicados por valor"
+          ],
+          "num": [
+            1,
+            2,
+            3
+          ],
+          "rows": [
+            [
+              "Primitive",
+              "297",
+              "284",
+              "292",
+              "1 grupo (`zinc/50` = `neutral/50`)"
+            ],
+            [
+              "Semantic/Color Scheme",
+              "82",
+              "81",
+              "82",
+              "9 grupos (alias a la misma semántica)"
+            ],
+            [
+              "Semantic/Common",
+              "60",
+              "60",
+              "60",
+              "0"
+            ],
+            [
+              "Component/Color Scheme",
+              "347",
+              "346",
+              "347",
+              "75 grupos (por diseño de tokens)"
+            ],
+            [
+              "Component/Common",
+              "1.687",
+              "1.685",
+              "1.687",
+              "72 grupos (por diseño de tokens)"
+            ],
+            [
+              "Custom",
+              "1.099",
+              "537",
+              "1.099",
+              "31 grupos"
+            ],
+            [
+              "App",
+              "6",
+              "6",
+              "6",
+              "0"
+            ],
+            [
+              "typography",
+              "35",
+              "0",
+              "35",
+              "0"
+            ]
+          ]
+        },
+        {
+          "type": "note",
+          "text": "Los duplicados de la capa de componente son alias a la misma semántica y forman parte del modelo de tokens: no son un problema. El problema real es `ALL_SCOPES`, que hace aparecer cualquier primitiva en todos los selectores de color, radio y espaciado."
+        }
+      ]
+    },
+    {
+      "id": "huerfanos",
+      "title": "Componentes huérfanos",
+      "icon": "ghost",
+      "severity": "warning",
+      "count": 20,
+      "intro": "Component sets o componentes con 0 instancias en todo el archivo.",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Componente",
+            "Página",
+            "Id",
+            "Variantes"
+          ],
+          "num": [
+            3
+          ],
+          "rows": [
+            [
+              "`media-button`",
+              "Media button",
+              "`18725:23541`",
+              "24"
+            ],
+            [
+              "`task-column`",
+              "Tareas+",
+              "`19102:38482`",
+              "12"
+            ],
+            [
+              "`Component 94`",
+              "Timeline",
+              "`16727:34245`",
+              "5"
+            ],
+            [
+              "`_stepper-step-header` (copia)",
+              "Stepper",
+              "`12431:106006`",
+              "3"
+            ],
+            [
+              "`Logos` (copia)",
+              "Logos",
+              "`18265:47810`",
+              "6"
+            ],
+            [
+              "`Logo UNIR Universidad Internacional de la Rioja`",
+              "Logos",
+              "`18259:29802`",
+              "8"
+            ],
+            [
+              "`Logo grid`",
+              "Logos",
+              "`18264:47304`",
+              "3"
+            ],
+            [
+              "`confirmdialog`",
+              "ConfirmDialog",
+              "`323:12317`",
+              "2"
+            ],
+            [
+              "`tieredmenu-popup`",
+              "TieredMenu",
+              "`2403:47612`",
+              "2"
+            ],
+            [
+              "`buttonchip`",
+              "Chip",
+              "`18045:130597`",
+              "3"
+            ],
+            [
+              "`SkeletonText`",
+              "Skeleton Text",
+              "`12596:140304`",
+              "4"
+            ],
+            [
+              "`progressspinner_prime`",
+              "ProgressSpinner",
+              "`367:12862`",
+              "4"
+            ],
+            [
+              "`Country dependency`",
+              "Dependencies",
+              "`12564:133364`",
+              "6"
+            ],
+            [
+              "`Bottom Bar Editor`",
+              "PDF Viewer",
+              "`12532:122291`",
+              "2"
+            ],
+            [
+              "`fileupload-items`",
+              "FIleupload",
+              "`14270:60870`",
+              "3"
+            ],
+            [
+              "`fila-eventos`",
+              "Agenda",
+              "`17343:53101`",
+              "3"
+            ],
+            [
+              "`_question_posibilidades`",
+              "Question",
+              "`12273:9704`",
+              "2"
+            ],
+            [
+              "`menubar-separator`, `megamenu-separator`, `contextmenu-separator`",
+              "Menubar, MegaMenu, ContextMenu",
+              "`6598:27027`, `6580:31703`, `6580:27001`",
+              "1"
+            ]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Notas",
+          "items": [
+            "Algunos pueden usarse en otros archivos que consumen la librería: comprobar en *Library analytics* antes de borrar.",
+            "Casi huérfanos: `_button-large_backup` y `_button-small_backup` (655 variantes cada uno) tienen 2 instancias de una sola variante, y solo en su propia página.",
+            "Unos 230 sets solo tienen instancias en su propia página (subpiezas `_*` y ejemplos de documentación). Es normal para piezas internas; en sets públicos como `drawer`, `popover`, `confirmpopup`, `dock`, `dataview` o `card-horizontal-full` indica poca adopción.",
+            "Las matrices grandes apenas se usan: `cascadeselect-input`, `_select-input` y `_treeselect-input` tienen 240 variantes y solo se usan entre 6 y 12."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "variantes",
+      "title": "Variantes incompletas",
+      "icon": "squares-four",
+      "severity": "warning",
+      "count": 11,
+      "intro": "Se revisan foco, hover, disabled e invalid. Cuentan como cubiertos tanto el valor dentro de `State` como una prop booleana aparte (`Focus`, `Disabled`, `Invalid`).",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Componente(s)",
+            "Falta",
+            "Impacto"
+          ],
+          "rows": [
+            [
+              "`button`, `button-small`, `button-large`, `semantic-button*`",
+              "Focus",
+              "**Alto**: el componente más usado no tiene foco visible"
+            ],
+            [
+              "`splitbutton`",
+              "Hover, Focus, Disabled",
+              "**Alto**"
+            ],
+            [
+              "`select`, `multiselect`, `treeselect`, `documenttype`, `password`, `autocomplete`",
+              "Focus, Disabled, Invalid en el wrapper (la pieza `_*-input` sí tiene la matriz completa)",
+              "Medio: quien usa el wrapper no puede mostrar esos estados"
+            ],
+            [
+              "`datepicker`",
+              "Hover, Disabled, Invalid",
+              "Medio"
+            ],
+            [
+              "`inputnumber`, `inputotp`, `inputlink`",
+              "Estados en general (solo tipo o tamaño)",
+              "Medio"
+            ],
+            [
+              "`menu-item`, `menubar-item`, `megamenu-item`, `tieredmenu-item`, `contextmenu-item`, `panelmenu-item`",
+              "Disabled",
+              "Medio"
+            ],
+            [
+              "`tabs-tab`",
+              "Focus, Disabled",
+              "Medio"
+            ],
+            [
+              "`sidebar-menu items`, `sidebar-submenu-items`, `_topbar-button*`, `topbar-dropdown`, `buttonchip`, `Chatbar-button-conversation`",
+              "Focus, Disabled",
+              "Medio"
+            ],
+            [
+              "`knob`, `colorpicker`, `inputphone`",
+              "Hover",
+              "Bajo"
+            ],
+            [
+              "`chip`, `autocomplete-chip`",
+              "Hover, Disabled",
+              "Bajo"
+            ],
+            [
+              "`skaleton` (`Theme: Light/Dark`), `_question_*` (`Darkmode: No`)",
+              "El tema va como variante en lugar de modo de variable",
+              "Medio: duplica variantes y se desincroniza de los modos de color"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paginas",
+      "title": "Organización por páginas",
+      "icon": "files",
+      "severity": "info",
+      "count": 140,
+      "intro": "Una página por componente con prefijo `❖`, separadores `---` por familia y la misma estructura interna (header como instancia de `_Page Header` más frames de documentación). Los componentes de documentación están centralizados en `Internal Components`.",
+      "blocks": [
+        {
+          "type": "list",
+          "title": "A corregir",
+          "items": [
+            "**Notas de trabajo en nombres de página**: `(añadir colores al chevron)`, `(falta dar diseño nuevo. Preguntar a Cristina)`, `(Dudas notificaciones)`, `(añadir sombra o borde)`, `(documentar solo estudiantes) Surfaces`, `[REVISAR]`, `[ACTUALIZAR]`, `[ELIMINAR O METER EN OTRO DOC]`. Mejor como comentarios o tareas.",
+            "**Estado mezclado en el nombre**: `✓`, `🟢`, `🔴`, `X` sin leyenda. Mejor el estado de página o una portada con la leyenda.",
+            "**Páginas vacías**: `Selector de asignaturas` y `Playground`. `Custom`, `Estudiantes` y `No usados` son separadores, pero sin el formato `---`.",
+            "**Espacios sobrantes**: `DataTable `, `ScrollTop `, `TieredMenu ✓  `, `Chatbox  Adjuntos`, `SelectButton ✓   🟢`, `Índice  [ACTUALIZAR]`.",
+            "**\"No usados\" dentro de la librería**: 30 páginas y unos 75 sets que siguen publicándose. Conviene moverlos a un archivo aparte.",
+            "**`Instancias ZeroHeight`**: 77 secciones de instancias. La propia página pide moverlas a otro documento.",
+            "**Descripciones**: solo 92 de 331 componentes (28%) tienen `description`. Los custom de Estudiantes (Card, InputChat, Navbar, Agenda, Sidebar, Topbar, Tareas+, Bottom Sheet) casi no tienen."
+          ]
+        }
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Resolver los 8 nombres duplicados",
+      "detail": "Borrar las copias huérfanas (`_stepper-step-header` `12431:106006`, `Logos` `18265:47810`) y `scrollpanel-bar` de DataTable tras pasar sus instancias al de ScrollPanel; renombrar el resto. Esto solo ya sube el score a unos 58."
+    },
+    {
+      "title": "Añadir foco a `button` y sus variantes",
+      "detail": "Prop booleana `Focus` como en `toggleswitch` o `paginator-navbutton`, y Disabled en los ítems de menú y en tabs."
+    },
+    {
+      "title": "Limpiar los effect styles",
+      "detail": "Borrar los 71 `focus/ring/shadow` invisibles y quedarse con unos 6 estilos de elevación: `field`, `overlay`, `modal`, `raised`, `toast` e `inset`."
+    },
+    {
+      "title": "Asignar scopes a las variables",
+      "detail": "Primero ocultar las primitivas de los selectores (scopes vacíos) y después los colores de componente (`FRAME_FILL`, `SHAPE_FILL`, `TEXT_FILL`, `STROKE_COLOR`)."
+    },
+    {
+      "title": "Normalizar el naming de los componentes custom",
+      "detail": "kebab-case, inglés, `_` para piezas internas, nombres reales en vez de `Property 1`, booleanos `False/True` y una escala de tamaños común (`sm/md/lg`)."
+    },
+    {
+      "title": "Corregir las erratas",
+      "detail": "Unos 14 cambios rápidos en nombres y valores de variante."
+    },
+    {
+      "title": "Archivar \"No usados\", los backups de Button y ZeroHeight",
+      "detail": "Moverlos a un archivo aparte reduce el peso de la librería publicada; solo los backups suman 1.965 variantes."
+    },
+    {
+      "title": "Pasar el tema de las variantes a modos de variable",
+      "detail": "En `skaleton` y `_question_*`."
+    },
+    {
+      "title": "Escribir descripciones de uso",
+      "detail": "Empezando por los componentes custom más usados."
+    },
+    {
+      "title": "Unificar o documentar los text styles Body y Label",
+      "detail": "Y renombrar `Bold` a `SemiBold` para que coincida con la fuente."
+    }
+  ],
+  "methodology": {
+    "steps": [
+      "Inspección por Plugin API, solo lectura, de las 119 páginas con contenido (`page.loadAsync()` en 8 llamadas paralelas).",
+      "`findAllWithCriteria` para sets, componentes e instancias.",
+      "`getInstancesAsync` por variante para detectar huérfanos en todo el archivo.",
+      "`getStyleConsumersAsync` para el uso de estilos.",
+      "Comparación por valor de effect styles, text styles y variables de color en todos los modos."
+    ],
+    "limits": [
+      "No incluye el uso desde otros archivos que consumen la librería.",
+      "La cobertura de estados se basa en nombres de props y valores, no en una revisión visual."
+    ]
+  }
+}
+  </script>
+
+  <script>
+    const data = JSON.parse(document.getElementById('audit-data').textContent);
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    const fmt = s => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    const SEV = {
+      critical: { label: 'Crítico', icon: 'warning-octagon' },
+      warning: { label: 'Advertencia', icon: 'warning' },
+      info: { label: 'Info', icon: 'info' },
+      ok: { label: 'Correcto', icon: 'check-circle' }
+    };
+    const sevOf = ratio => (ratio >= 0.8 ? 'ok' : ratio >= 0.5 ? 'warning' : 'critical');
+
+    document.title = `Auditoría · ${data.file.name}`;
+    document.getElementById('eyebrow').textContent = `Auditoría de librería · ${data.date}`;
+    document.getElementById('title').innerHTML = `${esc(data.file.name)} <span>Informe de salud</span>`;
+    document.getElementById('meta').innerHTML = `${esc(data.scope)} · <code style="background:rgb(255 255 255 / .15)">${esc(data.file.key)}</code>`;
+    document.getElementById('figma-link').href = data.file.url;
+    document.getElementById('score').textContent = data.score.total;
+    const ring = document.getElementById('ring');
+    const circ = 2 * Math.PI * 52;
+    ring.style.strokeDasharray = circ;
+    ring.style.strokeDashoffset = circ * (1 - Math.max(0, Math.min(100, data.score.total)) / 100);
+    document.getElementById('figures').innerHTML = data.figures
+      .map(f => `<div><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`).join('');
+
+    const blocks = b => {
+      const title = b.title ? `<h3>${fmt(b.title)}</h3>` : '';
+      if (b.type === 'table') {
+        const num = new Set(b.num || []);
+        const head = b.columns.map(c => `<th>${esc(c)}</th>`).join('');
+        const body = b.rows.map(r => `<tr>${r.map((c, i) => `<td${num.has(i) ? ' class="num"' : ''}>${fmt(c)}</td>`).join('')}</tr>`).join('');
+        return `${title}<div class="table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+      }
+      if (b.type === 'list') return `${title}<ul class="plain">${b.items.map(i => `<li>${fmt(i)}</li>`).join('')}</ul>`;
+      if (b.type === 'note') return `<p class="note"><i class="ph ph-lightbulb" aria-hidden="true"></i><span>${fmt(b.text)}</span></p>`;
+      if (b.type === 'text') return `${title}<p>${fmt(b.text)}</p>`;
+      return '';
+    };
+    const badge = (sev, text) => `<span class="badge sev-${sev}">${esc(text)}</span>`;
+
+    const cards = [];
+    const toc = [];
+    const addToc = (id, icon, title, count) =>
+      toc.push(`<li><a href="#${id}"><i class="ph ph-${icon}" aria-hidden="true"></i>${esc(title)}${count != null ? `<span class="count">${esc(count)}</span>` : ''}</a></li>`);
+
+    addToc('resumen', 'list-checks', 'Resumen');
+    cards.push(`<section class="card" id="resumen">
+      <h2><span class="icon"><i class="ph ph-list-checks"></i></span>Resumen ejecutivo</h2>
+      <ul class="summary">${data.summary.map(s => `<li class="sev-${s.severity}"><i class="ph-fill ph-${SEV[s.severity].icon}" aria-hidden="true"></i><span>${fmt(s.text)}</span></li>`).join('')}</ul>
+    </section>`);
+
+    addToc('score-card', 'gauge', 'Score de salud', data.score.total);
+    cards.push(`<section class="card" id="score-card">
+      <h2><span class="icon"><i class="ph ph-gauge"></i></span>Score de salud</h2>
+      <div class="metrics">${data.score.metrics.map(m => {
+        const sev = sevOf(m.points / m.weight);
+        return `<div class="metric sev-${sev}">
+          <div class="metric__head"><span>${esc(m.name)}</span><span>${m.points} / ${m.weight}</span></div>
+          <div class="bar"><span style="width:${(m.points / m.weight) * 100}%"></span></div>
+          <p>${fmt(m.reason)}</p></div>`;
+      }).join('')}</div>
+      <div class="score-total"><span>Base <strong>${data.score.base}</strong></span><span>Penalización <strong>-${data.score.penalty}</strong> (${data.score.criticals} críticos x 5)</span><span>Total <strong>${data.score.total} / 100</strong></span></div>
+    </section>`);
+
+    for (const s of data.sections) {
+      addToc(s.id, s.icon, s.title, s.count);
+      const label = s.count != null ? `${s.count} · ${SEV[s.severity].label}` : SEV[s.severity].label;
+      cards.push(`<section class="card sev-${s.severity}" id="${esc(s.id)}">
+        <h2><span class="icon"><i class="ph ph-${esc(s.icon)}"></i></span>${esc(s.title)}${badge(s.severity, label)}</h2>
+        ${s.intro ? `<p class="intro">${fmt(s.intro)}</p>` : ''}
+        ${(s.blocks || []).map(blocks).join('')}
+      </section>`);
+    }
+
+    addToc('recomendaciones', 'path', 'Recomendaciones', data.recommendations.length);
+    cards.push(`<section class="card" id="recomendaciones">
+      <h2><span class="icon"><i class="ph ph-path"></i></span>Recomendaciones priorizadas</h2>
+      <ol class="recs">${data.recommendations.map(r => `<li><div><strong>${fmt(r.title)}</strong><span>${fmt(r.detail)}</span></div></li>`).join('')}</ol>
+    </section>`);
+
+    addToc('metodologia', 'flask', 'Metodología');
+    cards.push(`<section class="card" id="metodologia">
+      <h2><span class="icon"><i class="ph ph-flask"></i></span>Metodología</h2>
+      <ul class="plain">${data.methodology.steps.map(i => `<li>${fmt(i)}</li>`).join('')}</ul>
+      ${data.methodology.limits.length ? `<h3>Limitaciones</h3><ul class="plain">${data.methodology.limits.map(i => `<li>${fmt(i)}</li>`).join('')}</ul>` : ''}
+    </section>`);
+
+    document.getElementById('main').innerHTML = cards.join('');
+    document.getElementById('toc').innerHTML = toc.join('');
+    document.getElementById('footer').textContent = `Informe generado con la skill component-audit · ${data.file.name} · ${data.date}`;
+
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const setTheme = dark => {
+      root.classList.toggle('dark', dark);
+      toggle.querySelector('i').className = `ph ph-${dark ? 'sun' : 'moon'}`;
+      toggle.querySelector('span').textContent = dark ? 'Modo claro' : 'Modo oscuro';
+    };
+    let stored = null;
+    try { stored = localStorage.getItem('audit-theme'); } catch {}
+    setTheme(stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+    toggle.addEventListener('click', () => {
+      const dark = !root.classList.contains('dark');
+      setTheme(dark);
+      try { localStorage.setItem('audit-theme', dark ? 'dark' : 'light'); } catch {}
+    });
+  </script>
+</body>
+</html>

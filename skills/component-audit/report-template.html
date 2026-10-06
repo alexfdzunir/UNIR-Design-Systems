@@ -368,9 +368,48 @@
       font-size: 0.75rem;
     }
 
+    /* Índice en móvil y tablet: menú hamburguesa con panel lateral */
+    .toc-toggle, .toc-backdrop { display: none; }
     @media (max-width: 1023.98px) {
       .layout { grid-template-columns: minmax(0, 1fr); }
-      .toc { display: none; }
+      .toc-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 50;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--text);
+        font-size: 1.25rem;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
+        cursor: pointer;
+      }
+      .toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .toc {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        align-self: stretch;
+        z-index: 40;
+        width: min(300px, 85vw);
+        padding: 24px 16px;
+        overflow-y: auto;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.2s ease, visibility 0.2s;
+      }
+      .toc.is-open { transform: none; visibility: visible; }
+      .toc-backdrop { position: fixed; inset: 0; z-index: 30; background: rgb(0 0 0 / 0.45); }
+      .toc-backdrop.is-open { display: block; }
     }
     @media (max-width: 767.98px) {
       .hero__inner { grid-template-columns: minmax(0, 1fr); padding: 40px 16px 32px; }
@@ -385,7 +424,7 @@
       footer { padding: 24px 16px 40px; }
     }
     @media print {
-      .toc, .hero__actions { display: none; }
+      .toc, .toc-toggle, .toc-backdrop, .hero__actions { display: none; }
       .layout { grid-template-columns: minmax(0, 1fr); }
       .card { break-inside: avoid; }
     }
@@ -420,8 +459,10 @@
     </div>
   </header>
 
+  <button type="button" class="toc-toggle" id="toc-toggle" aria-controls="toc-nav" aria-expanded="false" aria-label="Abrir índice"><i class="ph ph-list" aria-hidden="true"></i></button>
+  <div class="toc-backdrop" id="toc-backdrop"></div>
   <div class="layout">
-    <nav class="toc" aria-label="Índice">
+    <nav class="toc" id="toc-nav" aria-label="Índice">
       <p class="eyebrow">Contenido</p>
       <ol id="toc"></ol>
     </nav>
@@ -476,7 +517,7 @@
     document.title = `Auditoría · ${data.file.name}`;
     document.getElementById('eyebrow').textContent = `Auditoría de librería · ${data.date}`;
     document.getElementById('title').innerHTML = `${esc(data.file.name)} <span>Informe de salud</span>`;
-    document.getElementById('meta').innerHTML = `${esc(data.scope)} · <code style="background:rgb(255 255 255 / .15)">${esc(data.file.key)}</code>`;
+    document.getElementById('meta').textContent = data.scope;
     document.getElementById('figma-link').href = data.file.url;
     document.getElementById('score').textContent = data.score.total;
     const ring = document.getElementById('ring');
@@ -579,6 +620,22 @@
       setTheme(dark);
       try { localStorage.setItem('audit-theme', dark ? 'dark' : 'light'); } catch {}
     });
+
+    // Menú hamburguesa del índice (solo visible por debajo de 1024px)
+    const tocNav = document.getElementById('toc-nav');
+    const tocToggle = document.getElementById('toc-toggle');
+    const tocBackdrop = document.getElementById('toc-backdrop');
+    const setToc = open => {
+      tocNav.classList.toggle('is-open', open);
+      tocBackdrop.classList.toggle('is-open', open);
+      tocToggle.setAttribute('aria-expanded', String(open));
+      tocToggle.setAttribute('aria-label', open ? 'Cerrar índice' : 'Abrir índice');
+      tocToggle.querySelector('i').className = `ph ph-${open ? 'x' : 'list'}`;
+    };
+    tocToggle.addEventListener('click', () => setToc(!tocNav.classList.contains('is-open')));
+    tocBackdrop.addEventListener('click', () => setToc(false));
+    tocNav.addEventListener('click', e => { if (e.target.closest('a')) setToc(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && tocNav.classList.contains('is-open')) { setToc(false); tocToggle.focus(); } });
   </script>
 </body>
 </html>

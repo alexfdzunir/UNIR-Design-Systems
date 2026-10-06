@@ -4,7 +4,7 @@
 import figma from 'figma'
 
 const instance = figma.selectedInstance
-const view = instance.getEnum('Filtro', { 'Día': 'day', 'Tres días': 'three-days', Semana: 'week', 'Semana académica': 'academic-week', mes: 'month', Agenda: 'agenda' })
+const view = instance.getEnum('View', { Day: 'day', 'Three days': 'three-days', Week: 'week', 'Academic week': 'academic-week', Month: 'month', Agenda: 'agenda' })
 
 const example = figma.code`<prime-one-agenda [events]="events"${view === 'week' ? ' [(view)]="view"' : ` view="${view}"`} [(date)]="date" (eventClick)="openEvent($event)" />`
 const imports = ["import { PrimeOneAgenda } from 'prime-one-ds';"]

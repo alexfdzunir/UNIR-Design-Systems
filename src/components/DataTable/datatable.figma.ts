@@ -3,7 +3,6 @@
 // component=Table
 import figma from 'figma'
 import { flag, is, isInstance, part, prop } from '../../figma/helpers'
-import { P } from '../../figma/props'
 import { sizeOf, slug } from '../../figma/templates/field'
 
 const instance = figma.selectedInstance
@@ -24,9 +23,10 @@ const headerBar = instance.getBoolean('Show Header') ? part(instance, 'datatable
 const footerBar = instance.getBoolean('Show Footer') ? part(instance, 'datatable-footer') : undefined
 const toolbar = instance.getBoolean('Toolbar') ? part(instance, 'datatable-toolbar') : undefined
 const actions = toolbar
-  ? [['Limpiar filtros', 'ph ph-funnel-x'], ['Restaurar', 'ph ph-arrow-counter-clockwise'], [P.anAdirFila, 'ph ph-plus'], ['Exportar', 'ph ph-export']]
+  ? // [Figma boolean, button label, icon]
+    [['Clear filters', 'Limpiar filtros', 'ph ph-funnel-x'], ['Restore', 'Restaurar', 'ph ph-arrow-counter-clockwise'], ['Add row', 'Añadir fila', 'ph ph-plus'], ['Export', 'Exportar', 'ph ph-export']]
       .filter(([name]) => prop(toolbar, name) === true)
-      .map(([name, icon]) => `    <p-button label="${name}" icon="${icon}" severity="secondary" text />`)
+      .map(([, label, icon]) => `    <p-button label="${label}" icon="${icon}" severity="secondary" text />`)
       .join('\n')
   : ''
 

@@ -5,7 +5,7 @@ import figma from 'figma'
 import { is } from '../../figma/helpers'
 
 const instance = figma.selectedInstance
-const type = instance.getEnum('Type', { Pendientes: 'pending', Completadas: 'completed', 'Vencidas/Descartadas': 'overdue' })
+const type = instance.getEnum('Type', { Pending: 'pending', Completed: 'completed', 'Overdue/Discarded': 'overdue' })
 
 const example = figma.code`<prime-one-task-column type="${type}" [tasks]="${is(instance, 'Empty') ? '[]' : 'tasks'}"${is(instance, 'Device', 'Mobile') ? ' [mobile]="true"' : ''} (add)="newTask()" (taskClick)="openTask($event)" />`
 const imports = ["import { PrimeOneTaskColumn } from 'prime-one-ds';"]

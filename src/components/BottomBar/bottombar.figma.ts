@@ -6,7 +6,7 @@ import { is } from '../../figma/helpers'
 
 const instance = figma.selectedInstance
 
-const example = is(instance, 'Tipo', 'Editor')
+const example = is(instance, 'Type', 'Editor')
   ? figma.code`<prime-one-bottom-bar type="editor" [items]="tools" />`
   : figma.code`<prime-one-bottom-bar [page]="page" [totalPages]="totalPages" [words]="words" [statuses]="statuses" [items]="actions" [(zoom)]="zoom" />`
 const imports = ["import { PrimeOneBottomBar } from 'prime-one-ds';", "import { MenuItem } from 'primeng/api';"]

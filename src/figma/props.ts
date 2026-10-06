@@ -1,9 +1,5 @@
 // Exact Figma property names that contain emoji or arrows (generated from the published library)
 export const P = {
-  anAdirRespuesta: "Añadir Respuesta",
-  anAdirFila: "Añadir fila",
-  linkMaSEventos: "Link - Más eventos",
-  todoElDiA: "Todo el día",
   showHelper: "ℹ️ Show Helper",
   nested1: "↪ 1",
   nested1stButton: "↪ 1st Button",
@@ -13,9 +9,9 @@ export const P = {
   nestedCta: "↪ CTA",
   nestedCloseIcon: "↪ Close Icon",
   nestedContent: "↪ Content",
-  nestedEventoTodoElDiA2: "↪ Evento-todo el día 2",
-  nestedEventoTodoElDiA3: "↪ Evento-todo el día 3",
-  nestedEventoTodoElDiA4: "↪ Evento-todo el día 4",
+  nestedAllDayEvent2: "↪ All-day event 2",
+  nestedAllDayEvent3: "↪ All-day event 3",
+  nestedAllDayEvent4: "↪ All-day event 4",
   nestedHeader: "↪ Header",
   nestedIcon1: "↪ Icon 1",
   nestedIcon2: "↪ Icon 2",

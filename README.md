@@ -93,3 +93,7 @@ FIGMA_ACCESS_TOKEN=<token con permiso Code Connect> npm run figma:publish:aem
 ```
 
 El token necesita los scopes *Code Connect: Write* y *File content: Read* y acceso al fichero del DS. No lo guardes en el repositorio.
+
+## Skills
+
+`skills/` reúne skills para Claude y Codex que trabajan con Figma y el sistema de diseño: auditoría de librerías, generación de componentes, documentación, sincronización de tokens, Figma a código, `DESIGN.md` para Open Design y arquitectura de variables. La tabla de lo que hace cada una y cómo instalarlas está en [skills/README.md](skills/README.md).

@@ -1,6 +1,6 @@
 ---
 name: component-audit
-description: Auditar librerías y sistemas de diseño en Figma. Usar cuando el usuario quiera encontrar componentes huérfanos, detectar inconsistencias de naming, identificar variantes faltantes, analizar el estado de una librería de diseño, revisar cobertura de componentes, encontrar estilos duplicados o no usados, o generar un reporte de salud del design system. Activar ante "auditar Figma", "revisar librería", "componentes sin usar", "naming inconsistente", "health check design system", "variantes faltantes", "duplicados en Figma".
+description: Auditar librerías y sistemas de diseño en Figma. Usar cuando el usuario quiera encontrar componentes huérfanos, detectar inconsistencias de naming, identificar variantes faltantes, analizar el estado de una librería de diseño, revisar cobertura de componentes, encontrar estilos duplicados o no usados, revisar los tokens de cada componente (referencias rotas, tokens de componente frente a primitivos o semánticos, valores fijos) o generar un reporte de salud del design system. Activar ante "auditar Figma", "revisar librería", "componentes sin usar", "naming inconsistente", "health check design system", "variantes faltantes", "duplicados en Figma", "tokens rotos", "variables sin enlazar", "tokens de componente".
 ---
 
 # component-audit
@@ -71,6 +71,24 @@ Comparar estilos por valor, no por nombre:
 - Textos con misma configuración tipográfica pero nombre distinto
 - Sombras idénticas duplicadas
 
+### 6b. Tokens de componente
+
+Barrer los tokens de cada componente y comprobar que están bien configurados. Usar [`token-sweep.js`](token-sweep.js) con `use_figma` (solo lectura): rellenar `IDS` con los ids de un grupo de páginas y lanzar los grupos en paralelo, igual que el escaneo de naming. Para cada component set o componente suelto revisa sus propias capas, sin entrar en las instancias de otros componentes, y devuelve solo los que tienen algún problema más los totales.
+
+Qué comprueba:
+- **Referencias rotas**: variables enlazadas que ya no existen y alias que no resuelven en algún modo.
+- **Tipo de token**: si el componente usa tokens de componente o custom propios (por ejemplo `button/primary/background` en `button`) o, en su lugar, tokens de otro componente, semánticos o primitivos aplicados a pelo.
+- **Valores fijos**: colores, huecos, paddings, radios y bordes sin variable, textos sin estilo ni variables y efectos sin estilo.
+
+Antes de lanzarlo, revisar `KIND` (qué colección es primitiva, semántica o de componente) para el sistema auditado. Si hay colecciones que acaban como `ext`, ajustarlo y repetir.
+
+Clasificar:
+- 🔴 Crítico: componente con referencias rotas o alias rotos (cuenta uno por componente).
+- 🟡 Advertencia: tokens semánticos o primitivos aplicados directamente, tokens de otro componente, colores fijos.
+- 🟢 Info: números fijos y textos sin estilo.
+
+Un componente está **limpio** si no tiene referencias rotas ni colores fijos y al menos el 90% de sus referencias son tokens de componente propios (`MIN_OWN` en el script).
+
 ### 7. Reporte de salida
 
 Generar markdown estructurado:
@@ -99,6 +117,10 @@ Generar markdown estructurado:
 
 ## Variantes incompletas (N)
 ...
+
+## Tokens de componente (N)
+| Componente | Propios | Otros componentes | Semánticos | Primitivos | Rotos | Valores fijos |
+|-----------|---------|------------------|-----------|-----------|-------|---------------|
 
 ## Recomendaciones priorizadas
 1. ...
@@ -141,7 +163,7 @@ Además del `.md`, generar un HTML visual con [`report-template.html`](report-te
 - En los textos, `` `código` `` se pinta como `<code>` y `**texto**` como `<strong>`. El resto se escapa.
 - `icon` es un nombre de [Phosphor](https://phosphoricons.com) sin prefijo (`ghost`, `copy`, `text-aa`, `squares-four`, `files`).
 - `num` marca las columnas numéricas de una tabla (alineadas a la derecha).
-- Secciones habituales: críticos, naming, estilos duplicados, huérfanos, variantes incompletas, organización por páginas.
+- Secciones habituales: críticos, naming, estilos duplicados, huérfanos, variantes incompletas, tokens de componente (`icon`: `swatches`), organización por páginas.
 - El color de cada barra del score sale solo: verde si se alcanza el 80% del peso, ámbar desde el 50% y rojo por debajo.
 
 2. Inyectar el JSON en una copia de la plantilla:
@@ -164,12 +186,15 @@ EOF
 
 ## Score de salud
 
-| Métrica | Peso |
-|--------|------|
-| Naming consistente | 25% |
-| Sin huérfanos | 20% |
-| Variantes completas | 25% |
-| Sin duplicados | 15% |
-| Organización por páginas | 15% |
+| Métrica | Peso | Cálculo |
+|--------|------|---------|
+| Naming consistente | 20% | `20 × (1 − 2 × afectados / total)`, redondeado hacia abajo |
+| Sin huérfanos | 15% | Según la proporción de huérfanos y las páginas sin archivar |
+| Variantes completas | 20% | Según la cobertura de estados, tamaños y modos |
+| Sin duplicados | 10% | Según los estilos y variables duplicados por valor |
+| Organización por páginas | 15% | Según los nombres, las páginas vacías y las descripciones |
+| Tokens de componente | 20% | `20 × limpios / total`, redondeado hacia abajo |
+
+Los informes anteriores a la métrica de tokens (hasta el 2026-10-06) usaban otros pesos: naming 25, huérfanos 20, variantes 25, duplicados 15 y organización 15. Para comparar con uno de ellos, recalcular los dos con los mismos pesos o avisarlo en el informe.
 
 Penalización por cada problema crítico: -5 puntos.

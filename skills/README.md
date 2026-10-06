@@ -4,7 +4,7 @@ Skills para agentes de código (Claude y Codex) que trabajan con Figma y con el 
 
 | Skill | Qué hace |
 | --- | --- |
-| [`component-audit`](component-audit/SKILL.md) | Audita una librería de Figma: componentes huérfanos, naming inconsistente, variantes que faltan, estilos duplicados o sin usar, y un informe de salud del sistema en Markdown y en HTML visual. |
+| [`component-audit`](component-audit/SKILL.md) | Audita una librería de Figma: componentes huérfanos, naming inconsistente, variantes que faltan, estilos duplicados o sin usar, tokens de cada componente (referencias rotas, tokens de componente frente a primitivos o semánticos, valores fijos) y un informe de salud del sistema en Markdown y en HTML visual. |
 | [`component-generator`](component-generator/SKILL.md) | Crea componentes en Figma desde una descripción, un JSON de tokens o la guía de estilo, con sus variantes y estados y conectados a las variables del sistema. |
 | [`design-system-docs`](design-system-docs/SKILL.md) | Genera la documentación del sistema desde Figma (uso de cada componente, especificaciones, guía de estilo) y la exporta a Notion, Storybook o MDX. |
 | [`design-tokens-sync`](design-tokens-sync/SKILL.md) | Exporta e importa tokens entre Figma y código (JSON, Style Dictionary, W3C DTCG), compara versiones y los mantiene sincronizados con el repositorio. |

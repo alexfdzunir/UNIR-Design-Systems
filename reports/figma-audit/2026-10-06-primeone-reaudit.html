@@ -368,9 +368,48 @@
       font-size: 0.75rem;
     }
 
+    /* Índice en móvil y tablet: menú hamburguesa con panel lateral */
+    .toc-toggle, .toc-backdrop { display: none; }
     @media (max-width: 1023.98px) {
       .layout { grid-template-columns: minmax(0, 1fr); }
-      .toc { display: none; }
+      .toc-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 50;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--text);
+        font-size: 1.25rem;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
+        cursor: pointer;
+      }
+      .toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .toc {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        align-self: stretch;
+        z-index: 40;
+        width: min(300px, 85vw);
+        padding: 24px 16px;
+        overflow-y: auto;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.2s ease, visibility 0.2s;
+      }
+      .toc.is-open { transform: none; visibility: visible; }
+      .toc-backdrop { position: fixed; inset: 0; z-index: 30; background: rgb(0 0 0 / 0.45); }
+      .toc-backdrop.is-open { display: block; }
     }
     @media (max-width: 767.98px) {
       .hero__inner { grid-template-columns: minmax(0, 1fr); padding: 40px 16px 32px; }
@@ -385,7 +424,7 @@
       footer { padding: 24px 16px 40px; }
     }
     @media print {
-      .toc, .hero__actions { display: none; }
+      .toc, .toc-toggle, .toc-backdrop, .hero__actions { display: none; }
       .layout { grid-template-columns: minmax(0, 1fr); }
       .card { break-inside: avoid; }
     }
@@ -420,8 +459,10 @@
     </div>
   </header>
 
+  <button type="button" class="toc-toggle" id="toc-toggle" aria-controls="toc-nav" aria-expanded="false" aria-label="Abrir índice"><i class="ph ph-list" aria-hidden="true"></i></button>
+  <div class="toc-backdrop" id="toc-backdrop"></div>
   <div class="layout">
-    <nav class="toc" aria-label="Índice">
+    <nav class="toc" id="toc-nav" aria-label="Índice">
       <p class="eyebrow">Contenido</p>
       <ol id="toc"></ol>
     </nav>
@@ -442,7 +483,7 @@
     "key": "lWpcnToQVkqEqFifm67QaG"
   },
   "date": "2026-10-06",
-  "scope": "Reauditoría tras las correcciones · librería completa (132 páginas, 119 con contenido)",
+  "scope": "Estado actual frente a la auditoría de esta mañana · librería completa (132 páginas, 113 con contenido)",
   "figures": [
     {
       "label": "Componentes",
@@ -450,153 +491,164 @@
     },
     {
       "label": "Críticos",
-      "value": "1"
+      "value": "0"
     },
     {
       "label": "Con problemas de naming",
-      "value": "44"
+      "value": "0"
     },
     {
       "label": "Huérfanos",
       "value": "20"
     },
     {
-      "label": "Variables con ALL_SCOPES",
-      "value": "61"
+      "label": "Tokens limpios",
+      "value": "43%"
     },
     {
       "label": "Con descripción",
-      "value": "28%"
+      "value": "100%"
     }
   ],
   "score": {
-    "total": 57,
-    "base": 62,
-    "penalty": 5,
-    "criticals": 1,
+    "total": 66,
+    "base": 66,
+    "penalty": 0,
+    "criticals": 0,
     "metrics": [
       {
         "name": "Naming consistente",
-        "weight": 25,
-        "points": 18,
-        "reason": "44 de 331 componentes (13%): 2 con el nombre duplicado `fileupload`, 20 fuera de kebab-case (14 logos, 3 piezas de documentación y los 3 backups de Button) y 22 con props o valores en español. Ya no quedan `Property 1`, valores genéricos ni erratas."
+        "weight": 20,
+        "points": 20,
+        "reason": "0 de 331 componentes fuera de convención. Esta mañana eran unos 60."
       },
       {
         "name": "Sin huérfanos",
-        "weight": 20,
-        "points": 15,
-        "reason": "Los mismos 20 sets sin instancias: en esta ronda no se ha borrado nada."
+        "weight": 15,
+        "points": 11,
+        "reason": "Los mismos 20 sets sin instancias que esta mañana. No se ha borrado nada."
       },
       {
         "name": "Variantes completas",
-        "weight": 25,
-        "points": 14,
-        "reason": "Sin cambios: botones sin foco, ítems de menú sin disabled, wrappers de formulario sin invalid ni disabled y 16 escalas de tamaño distintas."
+        "weight": 20,
+        "points": 11,
+        "reason": "Sin cambios: botones sin foco, ítems de menú y tabs sin disabled, wrappers de formulario sin invalid ni disabled y 17 escalas de tamaño."
       },
       {
         "name": "Sin duplicados",
-        "weight": 15,
-        "points": 5,
-        "reason": "Sin cambios: 126 de 129 effect styles en grupos duplicados, 6 pares de text styles idénticos y `zinc/50` = `neutral/50`."
+        "weight": 10,
+        "points": 3,
+        "reason": "Sin cambios: 126 de 129 effect styles en grupos duplicados (118 sin uso), 6 pares de text styles idénticos y `zinc/50` = `neutral/50`."
       },
       {
         "name": "Organización por páginas",
         "weight": 15,
-        "points": 10,
-        "reason": "Corregidos la errata de `FileUpload` y los espacios sobrantes en 13 páginas. Siguen las notas de trabajo en los nombres, 2 páginas vacías y un 28% de componentes con descripción."
+        "points": 13,
+        "reason": "Descripciones del 28% al 100% y sin erratas en los nombres de página. Siguen las notas de trabajo, los estados con emoji y el `Índice` vacío."
+      },
+      {
+        "name": "Tokens de componente",
+        "weight": 20,
+        "points": 8,
+        "reason": "142 de 331 componentes limpios (43%). 0 referencias rotas y 0 externas. Siguen los colores fijos en logos, backups y documentación, y los tokens de otro componente en los inputs."
       }
     ]
   },
   "summary": [
     {
       "severity": "ok",
-      "text": "**Score de 18 a 57.** Los 8 duplicados de la primera auditoría están resueltos. Queda 1 que entonces se pasó por alto: `fileupload`."
+      "text": "**0 referencias rotas** (eran 10.815 en 63 componentes). Los 114 alias rotos de las variables apuntan ya a tokens vivos, y unas 9.300 referencias de componentes se han reenlazado al token vivo del mismo nombre o, si no existía, por valor."
     },
     {
       "severity": "ok",
-      "text": "**Scopes de variables**: de 2.999 con `ALL_SCOPES` a 61. Las 284 primitivas ya no salen en los selectores."
+      "text": "**0 referencias a librerías externas**: unas 8.000 sustituidas por tokens locales, formularios y logos incluidos."
     },
     {
       "severity": "ok",
-      "text": "**Naming**: 0 `Property 1`, 0 valores genéricos y 0 erratas. Los componentes custom están en kebab-case y en inglés."
+      "text": "**Score 66/100** con tokens y sin penalización. Con los criterios de esta mañana, de 18 a **72**: 0 duplicados (eran 9), 0 problemas de naming (unos 60), descripciones en el 100% (28%) y 61 variables con `ALL_SCOPES` (2.999)."
     },
     {
-      "severity": "critical",
-      "text": "**1 duplicado exacto**: `fileupload` en FileUpload (`12371:104640`) y en FileUpload Popup (`505:29350`)."
+      "severity": "ok",
+      "text": "**Color de Text enlazado en los botones**: 126 capas solo icono de `button`, `button-small`, `button-large` y `semantic-button*` con su token, y `semantic-button-large` Success ya usa `button/success/color`."
+    },
+    {
+      "severity": "ok",
+      "text": "**SpeedDial ya no depende de componentes borrados**: sus 91 botones son instancias del `button` local, redondas con `button/rounded/border/radius`. Los otros 5 compuestos ya usaban `button`."
+    },
+    {
+      "severity": "ok",
+      "text": "**Variables core seleccionables**: 242 colores en rellenos, bordes y efectos; 38 de escala en espaciados, tamaños, radios y bordes, y 4 pesos en peso de fuente."
     },
     {
       "severity": "warning",
-      "text": "**22 componentes con props o valores en español**, casi todos de Agenda, Question y Tareas+."
-    },
-    {
-      "severity": "warning",
-      "text": "**Sin cambios** en estados (botones sin foco), effect styles (126 de 129 duplicados) y los 20 huérfanos: no entraban en esta ronda."
-    },
-    {
-      "severity": "info",
-      "text": "**\"No usados\" no es prescindible**: 25 plantillas de Code Connect apuntan a sus componentes. Moverlos a otro archivo rompería esas plantillas."
+      "text": "**Sin cambios desde esta mañana** en estados (botones sin foco), effect styles (126 de 129 duplicados), escalas de tamaño y los 20 huérfanos."
     }
   ],
   "sections": [
     {
       "id": "comparativa",
-      "title": "Antes y después",
+      "title": "Esta mañana y ahora",
       "icon": "git-diff",
       "severity": "ok",
-      "intro": "Cambios aplicados entre las dos auditorías: renombrado de componentes, props y valores, scopes de variables y nombres de página. No se ha borrado nada ni se han añadido estados. Code Connect se republicó (127 componentes) con las plantillas ajustadas a los nombres nuevos.",
+      "intro": "Estado del archivo en la auditoría de esta mañana y ahora. No se ha borrado ningún componente ni se han añadido estados. Esta mañana no se medían los tokens: las referencias rotas y externas ya existían, solo que no se contaban.",
       "blocks": [
         {
           "type": "table",
           "columns": [
             "Métrica",
-            "Primera auditoría",
+            "Esta mañana",
             "Ahora"
           ],
           "rows": [
             [
-              "Score de salud",
-              "18",
-              "**57**"
+              "Score con los criterios de esta mañana (pesos 25/20/25/15/15, sin tokens)",
+              "18 (13 con el duplicado no detectado)",
+              "**72**"
             ],
             [
-              "Duplicados exactos (críticos)",
-              "8 (+1 no detectado)",
-              "1"
+              "Score completo (pesos nuevos, con tokens y referencias rotas)",
+              "n/d",
+              "**66**"
+            ],
+            [
+              "Duplicados exactos",
+              "9",
+              "**0**"
             ],
             [
               "Componentes con problemas de naming",
-              "unos 60 (estimado)",
-              "44 (contado)"
+              "unos 60",
+              "**0**"
             ],
             [
               "Props `Property 1`",
               "11",
-              "0"
-            ],
-            [
-              "Valores genéricos (`State4`, `Variant2`)",
-              "4 sets",
-              "0"
+              "**0**"
             ],
             [
               "Erratas en nombres, props y valores",
               "14",
-              "0"
+              "**0**"
+            ],
+            [
+              "Componentes con descripción",
+              "28%",
+              "**100%**"
             ],
             [
               "Variables con `ALL_SCOPES`",
               "2.999",
-              "61"
+              "**61**"
             ],
             [
-              "Primitivas en todos los selectores",
-              "284",
-              "0"
+              "Primitivas",
+              "En todos los selectores",
+              "**En los de su tipo**"
             ],
             [
               "Páginas con erratas o espacios sobrantes",
               "13",
-              "0"
+              "**0**"
             ],
             [
               "Componentes huérfanos",
@@ -609,11 +661,30 @@
               "126 de 129"
             ],
             [
-              "Componentes con descripción",
-              "28%",
-              "28%"
+              "Colores fijos en la capa `Text` de `button*`",
+              "n/d",
+              "**0**"
+            ],
+            [
+              "Referencias a librerías externas",
+              "n/d",
+              "**0**"
+            ],
+            [
+              "Componentes con referencias rotas",
+              "n/d",
+              "**0**"
+            ],
+            [
+              "Componentes con tokens limpios",
+              "n/d",
+              "142 de 331 (43%)"
             ]
           ]
+        },
+        {
+          "type": "note",
+          "text": "El score completo incluye la métrica de tokens, que esta mañana no se medía. Con los mismos criterios que entonces, la librería pasa de 18 a 72."
         }
       ]
     },
@@ -621,22 +692,77 @@
       "id": "criticos",
       "title": "Problemas críticos",
       "icon": "warning-octagon",
-      "severity": "critical",
-      "count": 1,
-      "intro": "Duplicado exacto que ya existía en la primera auditoría y se pasó por alto al contar a mano. Esta vez la comprobación se hace por script sobre los 331 nombres.",
+      "severity": "ok",
+      "count": 0,
+      "intro": "No quedan duplicados exactos ni referencias rotas. Los 9 duplicados de esta mañana están resueltos y las 10.815 referencias a variables borradas se han reenlazado a tokens vivos.",
       "blocks": [
         {
           "type": "table",
+          "title": "Referencias rotas reenlazadas por familia (63 componentes, 10.815 referencias)",
           "columns": [
-            "Componente",
-            "Ubicaciones (id)",
-            "Acción"
+            "Componentes",
+            "Nº",
+            "Referencias",
+            "Ejemplo de cambio"
+          ],
+          "num": [
+            1,
+            2
           ],
           "rows": [
             [
-              "`fileupload`",
-              "FileUpload `12371:104640` (custom) y FileUpload Popup `505:29350` (PrimeOne)",
-              "Renombrar el del popup a `fileupload-popup`, como su plantilla de Code Connect. No rompe nada: Code Connect va por node-id."
+              "Inputs de formulario: `_select-*`, `multiselect-*`, `_treeselect-*`, `cascadeselect-*`, `autocomplete-*`, `textarea*`, `inputtext`, `checkbox`, `_inputgroup-addon`, `_inputphone-option`",
+              "19",
+              "7.614",
+              "`component common/select/typography/size` → `typography/body/Body-M/size`"
+            ],
+            [
+              "Cards: `card-content`, `card-expandable`, `card-product`, `card-horizontal`, `card-horizontal-full`",
+              "5",
+              "1.996",
+              "Alias de `card/body/padding` → `scale/1`"
+            ],
+            [
+              "Bottom sheet: `_bottomsheet-part`, `bottomsheet`, `_bottomsheet-keyboard`",
+              "3",
+              "500",
+              "`component common/bottomsheet/body/font/family` → `typography/core/family`"
+            ],
+            [
+              "`button`, `button-small`, `button-large`, `semantic-button*` y los 3 backups",
+              "9",
+              "234",
+              "`component common/button/lg/font/size` → `button/lg/font/size`; alias de `button/outlined/success/border/color` → `green/700`"
+            ],
+            [
+              "`avatar`, `badge`, `overlaybadge`, `tag`, `toast`",
+              "5",
+              "170",
+              "`component common/badge/typography/font/family` → `typography/core/family`"
+            ],
+            [
+              "Chat: `inputchat`, `chatbox-content`, `chatbox-conversation`, `chatbar-*`, `_inputchat-button-small`",
+              "6",
+              "96",
+              "`semantic common/spacing/s/s` → `scale/*` por valor"
+            ],
+            [
+              "`menubar`, `menubar-item`, `menubar-submenu`, `menubar-separator`, `paginator`, `paginator-navbutton`",
+              "6",
+              "87",
+              "`component common/paginator/summary/font/size` → `typography/body/Body-S/size`"
+            ],
+            [
+              "`topbar`, `_topbar-button`, `_topbar-content`, `profile`, `steppermobile-circle`",
+              "5",
+              "68",
+              "Alias de `Component/Common/topbar/root/gap` → `scale/1-5`"
+            ],
+            [
+              "Agenda: `agenda-content`, `agenda-event-card`, `agenda-month-body-cell`, `agenda-day-number`, `agenda-time-cell`",
+              "5",
+              "50",
+              "Tamaños y pesos de fuente → `typography/*` y `font/weight/*` por valor"
             ]
           ]
         },
@@ -650,163 +776,201 @@
       "id": "naming",
       "title": "Advertencias de naming",
       "icon": "text-aa",
-      "severity": "warning",
-      "count": 42,
-      "intro": "Componentes que siguen fuera de la convención del archivo: kebab-case, en minúscula y en inglés.",
+      "severity": "ok",
+      "count": 0,
+      "intro": "Esta mañana unos 60 componentes rompían la convención. Ahora los 331 están en kebab-case, en minúscula y en inglés, sin espacios sobrantes ni erratas en props y valores. Comprobado por script.",
       "blocks": [
         {
           "type": "table",
-          "title": "Fuera de kebab-case (20)",
+          "title": "Corregido desde esta mañana",
           "columns": [
-            "Componentes",
-            "Página",
-            "Nota"
+            "Problema",
+            "Esta mañana",
+            "Ahora"
           ],
           "rows": [
             [
-              "14 logos: `Logos`, `Logos Small`, `Logo UNIR`, `Logo MIU`, `Logotipo Qualentum`...",
-              "Logos",
-              "Son assets de marca. Si se quiere esa excepción, conviene documentarla."
+              "Duplicados exactos (`button-small`, `card-content`, `fileupload`...)",
+              "9",
+              "0"
             ],
             [
-              "`_Page Header`, `_Component Label`, `_Section Header`",
-              "Internal Components",
-              "Piezas de documentación: `_page-header`, `_component-label`, `_section-header`."
+              "Props `Property 1`",
+              "11",
+              "0"
             ],
             [
-              "`_button-large_backup`, `_button_backup`, `_button-small_backup`",
-              "Button (Backup)",
-              "`_` en medio del nombre. Son backups sin uso."
-            ]
-          ]
-        },
-        {
-          "type": "table",
-          "title": "Props o valores en español (22)",
-          "columns": [
-            "Componente",
-            "Página",
-            "Props o valores"
-          ],
-          "rows": [
-            [
-              "`agenda`",
-              "Agenda",
-              "`Filtro: Día, Tres días, Semana, Semana académica, mes, Agenda`"
+              "Valores genéricos (`State4`, `Variant2`)",
+              "4 sets",
+              "0"
             ],
             [
-              "`agenda-weekday-cell`",
-              "Agenda",
-              "`Inicio: Lunes...Domingo`"
+              "Erratas (`skaleton`, `Trascribing`, `Succes`, `Subtitule`, `Carrousel`...)",
+              "14",
+              "0"
             ],
             [
-              "`agenda-calendar-card`",
-              "Agenda",
-              "`Color: Verde, Morado`"
+              "PascalCase, espacios o snake_case en el nombre (14 logos incluidos)",
+              "unos 40",
+              "0"
             ],
             [
-              "`agenda-event-card`",
-              "Agenda",
-              "`State: Cancelado, Pendiente, Sin evento`"
-            ],
-            [
-              "`agenda-month-body-cell`",
-              "Agenda",
-              "Booleanos `Eventos` y `Evento-todo el día 2..4`"
-            ],
-            [
-              "`agenda-month-cell`",
-              "Agenda",
-              "Booleano `Link - Más eventos`"
-            ],
-            [
-              "`agenda-time-cell`",
-              "Agenda",
-              "Booleano `Todo el día`"
-            ],
-            [
-              "`question`",
-              "Question",
-              "`Rol`, `Tipo`, `Estado` y booleano `Añadir Respuesta`"
-            ],
-            [
-              "`_question-options-generic`",
-              "Question",
-              "`State: Desplegado`"
-            ],
-            [
-              "`_question-radio-true-false`",
-              "Question",
-              "`Correcta`"
-            ],
-            [
-              "`task-column`",
-              "Tareas+",
-              "`Type: Pendientes, Completadas, Vencidas/Descartadas`"
-            ],
-            [
-              "`_task-type`",
-              "Tareas+",
-              "`Tipo`"
-            ],
-            [
-              "`_task-priority`",
-              "Tareas+",
-              "`Prioridad`"
-            ],
-            [
-              "`_task-due`",
-              "Tareas+",
-              "`Estado`"
-            ],
-            [
-              "`perfil`",
-              "Perfil",
-              "Nombre del set (en Code Connect es `profile`)"
-            ],
-            [
-              "`sidebar`",
-              "Sidebar",
-              "Booleano `Perfil`"
-            ],
-            [
-              "`sidebar-menu-item`",
-              "Sidebar",
-              "`Item: Mi espacio`"
-            ],
-            [
-              "`tapbar-icon`",
-              "Tap Bar",
-              "`Item: Trámites, Académico, Mensajes...`"
-            ],
-            [
-              "`_chatbox-attachment-card`, `_inputchat-attachment-card`",
-              "Chatbox, InputChat",
-              "`Item: Imagen, Archivo, Texto...` y `Foto`"
-            ],
-            [
-              "`pdfviewer-bottom-bar`",
-              "PDF Viewer",
-              "`Tipo: Paginador, Editor`"
-            ],
-            [
-              "`datatable-toolbar`",
-              "DataTable",
-              "Booleano `Añadir fila`"
+              "Props o valores en español (`Celda`, `Estado`, `Fondo Azul`, `Sin tag`...)",
+              "unos 15 sets",
+              "0"
             ]
           ]
         },
         {
           "type": "note",
-          "text": "Los valores de dominio (días de la semana, estados de una tarea) pueden quedarse en español si el equipo lo decide. En ese caso conviene documentarlo como excepción y traducir solo los nombres de las props."
+          "text": "Code Connect está ajustado a las props nuevas. La plantilla de `toolbar` ahora encuentra `↪ Icon 1` y `↪ Icon 3`, que tenían un espacio inicial."
         },
         {
           "type": "list",
-          "title": "Valores sin escala común",
+          "title": "Pendiente: valores sin escala común",
           "items": [
             "Booleanos: `False/True` en 237 props, `No/Yes` en 36 y `Off/On` en 21.",
-            "Tamaños: 16 escalas distintas en las props `Size`. Las más usadas son `Normal/Small/Large` (21 sets), `md/sm` (12), `Default/Small/Large` (10), `M/S` (8), `Medium/Small` (6), `XS..XL` (5) y `Desktop/Mobile` (5). Las otras 9 tienen 1 o 2 usos.",
+            "Tamaños: 17 escalas distintas en las props `Size`. Las más usadas son `Normal/Small/Large` (14 sets), `md/sm` (12), `Default/Small/Large` (10), `M/S` (8), `Medium/Small` (6), `Desktop/Mobile` (5) y `XS..XL` (5).",
             "Sets de una sola variante, que deberían ser componentes simples: `tapbar`, `menubar-menuitem-text`, `_profile-content`, `_question-options-generic`."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tokens",
+      "title": "Tokens de componente",
+      "icon": "swatches",
+      "severity": "warning",
+      "count": 189,
+      "intro": "Barrido de las capas propias de cada componente. En la raíz de una instancia solo cuenta lo que el componente sobrescribe. Un componente está limpio si no tiene referencias rotas ni colores fijos y al menos el 90% de sus referencias son tokens propios. Limpios: **142 de 331**. Referencias analizadas: 105.310.",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Referencias por tipo",
+          "columns": [
+            "Tipo",
+            "Referencias",
+            "%"
+          ],
+          "num": [
+            1,
+            2
+          ],
+          "rows": [
+            [
+              "Tokens propios del componente",
+              "74.064",
+              "70,3%"
+            ],
+            [
+              "Primitivos y tipografía aplicados a pelo",
+              "16.703",
+              "15,9%"
+            ],
+            [
+              "Tokens de otro componente",
+              "7.273",
+              "6,9%"
+            ],
+            [
+              "Semánticos aplicados a pelo",
+              "7.270",
+              "6,9%"
+            ],
+            [
+              "Librerías externas",
+              "0",
+              "0%"
+            ],
+            [
+              "Variables borradas o alias rotos",
+              "0",
+              "0%"
+            ]
+          ]
+        },
+        {
+          "type": "note",
+          "text": "Los primitivos suben porque muchas referencias rotas de tipografía y espaciado se han reenlazado por valor a `typography/*`, `scale/*` y `font/weight/*`. Es la opción que conserva el diseño; el siguiente paso sería crear tokens de componente para esos casos."
+        },
+        {
+          "type": "table",
+          "title": "Hecho hoy",
+          "columns": [
+            "Cambio",
+            "Alcance"
+          ],
+          "rows": [
+            [
+              "Color de la capa `Text` enlazado al token de su variante con texto",
+              "126 capas en `button`, `button-small`, `button-large` y `semantic-button*`"
+            ],
+            [
+              "`semantic-button-large` Success Idle",
+              "`button/success/hover/color` cambiado por `button/success/color`"
+            ],
+            [
+              "Tokens externos sustituidos por tokens locales",
+              "Unas 8.000 referencias, formularios y logos incluidos"
+            ],
+            [
+              "Alias rotos en variables",
+              "114 entradas de modo apuntadas a tokens vivos"
+            ],
+            [
+              "Referencias a variables borradas",
+              "Unas 9.300, reenlazadas al token vivo del mismo nombre o por valor"
+            ],
+            [
+              "`speeddial`: instancias de componentes borrados",
+              "91 cambiadas por el `button` local, con `button/rounded/border/radius`"
+            ],
+            [
+              "Scopes de las variables core",
+              "242 colores, 38 de escala y 4 pesos de nuevo seleccionables"
+            ]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Cómo se sustituyeron los tokens externos",
+          "items": [
+            "Variables borradas: el token vivo con el mismo nombre sin el prefijo antiguo (`component common/button/lg/font/size` → `button/lg/font/size`) o, si no existe, uno por valor.",
+            "Mismo nombre en local (Estudiantes, Aura): el token local. En 13 tokens el valor local es distinto y manda el de PrimeOne, por ejemplo `datepicker/month/border/radius` 6 → 8 y `button/sm/icon/only/width` 34 → 30.",
+            "Equivalentes con otro nombre: `card/border/radius`, `textarea/custom/char-count/color`, `proeduca-fileupload/*`, `button/icon/size` (20), `card/icon/S/size` e `icon/size` (16).",
+            "Tipografía antigua (`Tipography`, `Typhography`): `typography/core/family` y la escala `typography/*` por valor. El estilo de fuente queda fijo.",
+            "Números sin equivalente: la escala primitiva `scale/*` con el mismo valor. Colores sin equivalente: el más cercano de `surface/*`, `primary/*` o las primitivas, con una diferencia de 24 a 30 en RGB como máximo.",
+            "Rellenos transparentes de las cards (alfa 0): eliminados. Logos, radio 1000 de `media-button` y trazo de 1 de los iconos: valor fijo."
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Componentes a revisar (además de los críticos)",
+          "columns": [
+            "Componente",
+            "Problema"
+          ],
+          "rows": [
+            [
+              "`_inputphone-input`, `textarea`, `inputtext`, `_select-input`, `multiselect-input`",
+              "Entre 650 y 1.000 tokens de otro componente cada uno; `_inputphone-input` usa los de `select`"
+            ],
+            [
+              "`speeddial`",
+              "364 referencias a `button/rounded/border/radius`: es el radio redondo de sus botones, sobrescrito en cada instancia"
+            ],
+            [
+              "Logos",
+              "Colores fijos de marca (unos 1.600), sin equivalente en las paletas del DS"
+            ],
+            [
+              "`_gettingstarter-topbar`, backups de Button",
+              "1.549 y 732 colores fijos (documentación y backups sin uso)"
+            ],
+            [
+              "`pdfviewer-bottom-bar`, `inputchat`, `colorpicker`",
+              "Entre 7 y 23 colores fijos"
+            ]
           ]
         }
       ]
@@ -817,11 +981,11 @@
       "icon": "copy",
       "severity": "critical",
       "count": 133,
-      "intro": "Comparación por valor, no por nombre. Effect styles y text styles siguen igual que en la primera auditoría. Las variables ya tienen scopes.",
+      "intro": "Comparación por valor, no por nombre. Effect y text styles sin cambios desde esta mañana; los scopes de las variables sí cambian.",
       "blocks": [
         {
           "type": "table",
-          "title": "Effect styles (126 de 129 en grupos duplicados, 117 sin uso)",
+          "title": "Effect styles (126 de 129 en grupos duplicados, 118 sin uso)",
           "columns": [
             "Grupo",
             "Nº",
@@ -913,7 +1077,7 @@
         },
         {
           "type": "note",
-          "text": "Sin uso: `Headline-1` y `Headline-2`. `Body/* Bold` sigue usando el peso SemiBold."
+          "text": "Sin uso: `Headline-1`, `Headline-2` y `Body/Body XS Medium`. `Body/* Bold` sigue usando el peso SemiBold."
         },
         {
           "type": "table",
@@ -921,8 +1085,8 @@
           "columns": [
             "Colección",
             "Variables",
-            "Con ALL_SCOPES",
-            "Ocultas",
+            "ALL_SCOPES esta mañana",
+            "ALL_SCOPES ahora",
             "Sin descripción"
           ],
           "num": [
@@ -935,49 +1099,49 @@
             [
               "Primitive",
               "297",
-              "0",
               "284",
+              "0",
               "292"
             ],
             [
               "Semantic/Color Scheme",
               "82",
-              "0",
+              "81",
               "0",
               "82"
             ],
             [
               "Semantic/Common",
               "60",
+              "60",
               "2",
-              "0",
               "60"
             ],
             [
               "Component/Color Scheme",
               "347",
+              "346",
               "0",
-              "1",
               "347"
             ],
             [
               "Component/Common",
               "1.687",
+              "1.685",
               "57",
-              "0",
               "1.687"
             ],
             [
               "Custom",
               "1.099",
+              "537",
               "2",
-              "0",
               "1.099"
             ],
             [
               "App",
               "6",
-              "0",
+              "6",
               "0",
               "6"
             ],
@@ -992,7 +1156,7 @@
         },
         {
           "type": "note",
-          "text": "Las 61 con `ALL_SCOPES` son 60 offsets (`focus/ring/offset`, `arrow/offset`, `group/offset`), para los que Figma no tiene scope, y `proeduca-fileupload/items/number`. Queda una primitiva duplicada: `zinc/50` = `neutral/50`."
+          "text": "Las primitivas salen solo en los selectores de su tipo: colores en rellenos, bordes y efectos; `scale/*` en espaciados, tamaños, radios, bordes y efectos; `font/weight/*` en peso de fuente. Las 61 con `ALL_SCOPES` son 60 offsets (`focus/ring/offset`, `arrow/offset`, `group/offset`), para los que Figma no tiene scope, y `proeduca-fileupload/items/number`. Queda una primitiva duplicada: `zinc/50` = `neutral/50`."
         }
       ]
     },
@@ -1002,7 +1166,7 @@
       "icon": "ghost",
       "severity": "warning",
       "count": 20,
-      "intro": "Component sets o componentes con 0 instancias en todo el archivo. Son los mismos 20 de la primera auditoría, con los nombres nuevos.",
+      "intro": "Component sets o componentes con 0 instancias en todo el archivo. Son los mismos 20 que esta mañana, con sus nombres actuales.",
       "blocks": [
         {
           "type": "table",
@@ -1032,7 +1196,7 @@
               "Sí"
             ],
             [
-              "`Logo UNIR Universidad Internacional de la Rioja`",
+              "`logo-unir-larioja`",
               "Logos",
               "`18259:29802`",
               "8",
@@ -1046,7 +1210,7 @@
               "No"
             ],
             [
-              "`Logos Small`",
+              "`logos-small`",
               "Logos",
               "`18265:47810`",
               "6",
@@ -1102,7 +1266,7 @@
               "Sí"
             ],
             [
-              "`Logo grid`",
+              "`logo-grid`",
               "Logos",
               "`18264:47304`",
               "3",
@@ -1151,7 +1315,7 @@
           "items": [
             "7 de los 20 tienen Code Connect, es decir, están implementados en código. Que no tengan instancias en este archivo no significa que sobren.",
             "Antes de borrar cualquiera, comprobar en *Library analytics* si se usa en otros archivos.",
-            "153 sets solo tienen instancias en su propia página (subpiezas `_*` y ejemplos de documentación). La primera auditoría estimaba unos 230 a ojo; esta vez están contados."
+            "133 sets solo tienen instancias en su propia página (subpiezas `_*` y ejemplos de documentación)."
           ]
         }
       ]
@@ -1162,7 +1326,7 @@
       "icon": "squares-four",
       "severity": "warning",
       "count": 11,
-      "intro": "Sin cambios desde la primera auditoría. Se revisan foco, hover, disabled e invalid, contando tanto el valor dentro de `State` como una prop booleana aparte.",
+      "intro": "Sin cambios desde esta mañana. Comprobado de nuevo en `button`, `splitbutton`, `menu-item`, `tabs-tab`, `select`, `datepicker`, `chip` e `inputnumber`.",
       "blocks": [
         {
           "type": "table",
@@ -1237,7 +1401,7 @@
       "icon": "files",
       "severity": "info",
       "count": 132,
-      "intro": "132 páginas: 119 con contenido y 13 separadores. Ya no hay erratas ni espacios sobrantes en los nombres.",
+      "intro": "132 páginas: 113 con contenido, 13 separadores `---` y 6 vacías. Desde esta mañana se corrigieron las erratas y los espacios sobrantes de 13 páginas.",
       "blocks": [
         {
           "type": "list",
@@ -1245,30 +1409,31 @@
           "items": [
             "**Notas de trabajo en nombres de página**: `[REVISAR]`, `[ACTUALIZAR]` (2), `(añadir colores al chevron)`, `[ELIMINAR O METER EN OTRO DOC]`, `(falta dar diseño nuevo. Preguntar a Cristina)`, `(Dudas notificaciones)`, `(añadir sombra o borde)`, `(documentar solo estudiantes) Surfaces`.",
             "**Estado en el nombre**: `✓`, `🟢`, `🔴`, `X` sin leyenda.",
-            "**Páginas vacías**: `Selector de asignaturas` y `Playground`. `Custom`, `Estudiantes` y `No usados` hacen de separadores, pero sin el formato `---`.",
+            "**Páginas vacías**: `Índice [ACTUALIZAR]`, `Selector de asignaturas` y `Playground`. `Custom`, `Estudiantes` y `No usados` hacen de separadores, pero sin el formato `---`.",
             "**\"No usados\"**: 24 páginas con 56 componentes. 25 plantillas de Code Connect apuntan a ellos, así que no se pueden mover a otro archivo sin rehacer esas plantillas.",
-            "**`Instancias ZeroHeight`**: 77 secciones. La propia página pide moverlas a otro documento.",
-            "**Descripciones**: 93 de 331 componentes (28%)."
+            "**`Instancias ZeroHeight`**: 87 nodos de primer nivel. La propia página pide moverlos a otro documento. `Archive` ya guarda dos secciones (`Multimarca / Estilos Universidades` y `Chat IA - Textos legales`).",
+            "**Descripciones**: 331 de 331 (100%). 5 de las heredadas de PrimeVue son genéricas o tienen erratas: `documenttype` y `_inputphone-prefix` (texto del antiguo Dropdown), `navbar-menu-popup` (texto de Menu) e `image` e `image-preview` (`tranformation`)."
           ]
         }
       ]
     },
     {
       "id": "correcciones",
-      "title": "Correcciones a la primera auditoría",
+      "title": "Correcciones a la auditoría de esta mañana",
       "icon": "arrow-counter-clockwise",
       "severity": "info",
-      "intro": "Datos de la primera auditoría que estaban mal. Ninguno cambia sus conclusiones, salvo el score inicial.",
+      "intro": "Datos de esta mañana que estaban mal. Ninguno cambia sus conclusiones, salvo el score inicial.",
       "blocks": [
         {
           "type": "list",
           "items": [
-            "Había **9 duplicados exactos, no 8**: `fileupload` se pasó por alto al contar a mano. Con él, el score inicial habría sido 13 en lugar de 18.",
+            "Había **9 duplicados exactos, no 8**: `fileupload` se pasó por alto al contar a mano. Con él, el score de esta mañana habría sido 13 en lugar de 18.",
             "Son **132 páginas** (119 con contenido y 13 separadores), no 140.",
             "\"No usados\" tiene **24 páginas con 56 componentes**, no 30 páginas y unos 75 sets.",
-            "Los sets usados solo en su propia página son **153** (contados), no unos 230 (estimados).",
-            "Archivar \"No usados\" en otro archivo, como recomendaba, rompería 25 plantillas de Code Connect.",
-            "El **recuento de instancias no es fiable** con la Plugin API: en las mismas 15 páginas dio 8.877, 20.365 y 28.585 en tres pasadas, según cuántas capas internas de instancias estuvieran cargadas. Se retira de las cifras. La detección de huérfanos usa `getInstancesAsync` y dio los mismos 20 en las dos auditorías."
+            "Los sets usados solo en su propia página son **133** (contados), no unos 230 (estimados).",
+            "Archivar \"No usados\" en otro archivo, como se recomendaba, rompería 25 plantillas de Code Connect.",
+            "El **recuento de instancias no es fiable** con la Plugin API: varía según cuántas capas internas estén cargadas. Se retira la cifra de 29.926. La detección de huérfanos usa `getInstancesAsync`.",
+            "Recomendaba **ocultar las primitivas con scopes vacíos**. Eso impide seleccionarlas en Figma; ahora cada una tiene los scopes de su tipo."
           ]
         }
       ]
@@ -1276,58 +1441,53 @@
   ],
   "recommendations": [
     {
-      "title": "Renombrar el `fileupload` del popup a `fileupload-popup`",
-      "detail": "Es el último crítico: el score sube a 62. No afecta a Code Connect, que va por node-id."
-    },
-    {
-      "title": "Publicar la librería en Figma",
-      "detail": "Code Connect ya usa los nombres nuevos. Hasta que se publique, los archivos que consumen la librería ven los antiguos y fallan los snippets de skeleton-text, timeline, inputchat, los chats y las cards."
-    },
-    {
       "title": "Añadir foco a `button` y sus variantes",
       "detail": "Prop booleana `Focus` como en `toggleswitch` o `paginator-navbutton`, y Disabled en los ítems de menú y en tabs."
     },
     {
       "title": "Limpiar los effect styles",
-      "detail": "Borrar los 71 `focus/ring/shadow` invisibles y quedarse con unos 6 de elevación. 117 de los 129 no tienen uso."
+      "detail": "Borrar los 71 `focus/ring/shadow` invisibles y quedarse con unos 6 de elevación. 118 de los 129 no tienen uso."
     },
     {
-      "title": "Decidir el idioma de los componentes custom",
-      "detail": "Traducir los nombres de las 22 props en español y, si se quiere, mantener los valores de dominio documentados como excepción."
+      "title": "Crear tokens de componente donde hoy hay primitivos",
+      "detail": "Las tipografías y espaciados reenlazados por valor (`typography/*`, `scale/*`) funcionan, pero un token de componente (`select/font/size`...) haría los ajustes por marca más sencillos."
+    },
+    {
+      "title": "Revisar los tokens de otro componente en los inputs",
+      "detail": "`_inputphone-input` usa los de `select`; `textarea`, `inputtext`, `_select-input` y `multiselect-input` tienen entre 650 y 1.000 cada uno. Alinear también `steppermobile` con `stepper-mobile/*`, `chatbar-*` con `inputchat/*` y `tapbar-icon` con `bottombar/*`."
     },
     {
       "title": "Unificar tamaños y booleanos",
-      "detail": "Pasar de 16 escalas de tamaño a una (`sm/md/lg`) y usar `False/True` en todos los booleanos."
+      "detail": "Pasar de 17 escalas de tamaño a una (`sm/md/lg`) y usar `False/True` en todos los booleanos."
     },
     {
       "title": "Revisar los 20 huérfanos con Library analytics",
       "detail": "7 tienen Code Connect y están en código. Borrar solo los que no se usen en ningún archivo."
     },
     {
-      "title": "Mantener \"No usados\" en el archivo o rehacer su Code Connect",
-      "detail": "Si se archivan en otro documento, hay que mover también sus 25 plantillas de Code Connect."
+      "title": "Revisar las descripciones heredadas",
+      "detail": "`documenttype`, `_inputphone-prefix`, `navbar-menu-popup`, `image` e `image-preview` llevan el texto genérico de PrimeVue o una errata."
     },
     {
-      "title": "Pasar a kebab-case las piezas de documentación",
-      "detail": "`_Page Header`, `_Component Label` y `_Section Header`: renombrado seguro, no tienen Code Connect."
-    },
-    {
-      "title": "Escribir descripciones de uso",
-      "detail": "Solo el 28% de los componentes tiene descripción. Empezar por los custom más usados."
+      "title": "Publicar la librería",
+      "detail": "Los cambios de hoy (nombres, descripciones, tokens y scopes) no llegan a los archivos que la usan hasta publicarla."
     }
   ],
   "methodology": {
     "steps": [
-      "Inspección por Plugin API, solo lectura, de las 119 páginas con contenido en 8 llamadas paralelas (`page.loadAsync()` + `findAllWithCriteria`).",
-      "Naming calculado por script: kebab-case, `Property N`, valores genéricos, erratas conocidas, props en minúscula y palabras en español.",
-      "Duplicados comprobados sobre la lista completa de 331 nombres (exactos, sin distinguir mayúsculas y sin `_` inicial).",
+      "Inspección por Plugin API, solo lectura, de las 113 páginas con contenido en llamadas paralelas por grupos de páginas (`page.loadAsync()` + `findAllWithCriteria`).",
+      "Naming por script: kebab-case, `Property N`, valores genéricos, espacios al inicio o al final, erratas conocidas y palabras en español en nombres, props y valores.",
       "Huérfanos con `getInstancesAsync` por variante; uso de estilos con `getStyleConsumersAsync`.",
-      "Puntos de naming = 25 × (1 − 2 × afectados / total), redondeado hacia abajo. En la primera auditoría los afectados se estimaron a mano (unos 60)."
+      "Tokens con `token-sweep.js`. En la raíz de una instancia solo cuenta lo que el componente sobrescribe. Las pinturas se cuentan una vez. Las variables de otra librería son externas aunque su colección se llame Core o semantic, y las variables borradas que siguen enlazadas cuentan como referencias rotas.",
+      "Referencias rotas reenlazadas por script: los alias de variables al token vivo equivalente, y los enlaces de componentes al token vivo con el mismo nombre o, si no existe, por valor. Verificado después en los 331 componentes: 0 rotas y 0 externas.",
+      "Pesos: naming 20, huérfanos 15, variantes 20, duplicados 10, organización 15 y tokens 20, y 5 puntos menos por crítico. Para comparar con esta mañana se calcula también con sus pesos (25/20/25/15/15) y sin tokens: 72."
     ],
     "limits": [
       "No incluye el uso desde otros archivos que consumen la librería.",
       "El español se detecta con un diccionario de palabras frecuentes: puede escaparse alguna.",
-      "La cobertura de estados se basa en nombres de props y valores, no en una revisión visual."
+      "La cobertura de estados se basa en nombres de props y valores, no en una revisión visual.",
+      "El token propio se decide por el nombre: si el componente y la raíz del token no coinciden (`steppermobile` y `stepper-mobile`), cuenta como token de otro componente.",
+      "Esta mañana no se medían los tokens, así que no hay cifras de entonces para compararlas."
     ]
   }
 }
@@ -1348,7 +1508,7 @@
     document.title = `Auditoría · ${data.file.name}`;
     document.getElementById('eyebrow').textContent = `Auditoría de librería · ${data.date}`;
     document.getElementById('title').innerHTML = `${esc(data.file.name)} <span>Informe de salud</span>`;
-    document.getElementById('meta').innerHTML = `${esc(data.scope)} · <code style="background:rgb(255 255 255 / .15)">${esc(data.file.key)}</code>`;
+    document.getElementById('meta').textContent = data.scope;
     document.getElementById('figma-link').href = data.file.url;
     document.getElementById('score').textContent = data.score.total;
     const ring = document.getElementById('ring');
@@ -1451,6 +1611,22 @@
       setTheme(dark);
       try { localStorage.setItem('audit-theme', dark ? 'dark' : 'light'); } catch {}
     });
+
+    // Menú hamburguesa del índice (solo visible por debajo de 1024px)
+    const tocNav = document.getElementById('toc-nav');
+    const tocToggle = document.getElementById('toc-toggle');
+    const tocBackdrop = document.getElementById('toc-backdrop');
+    const setToc = open => {
+      tocNav.classList.toggle('is-open', open);
+      tocBackdrop.classList.toggle('is-open', open);
+      tocToggle.setAttribute('aria-expanded', String(open));
+      tocToggle.setAttribute('aria-label', open ? 'Cerrar índice' : 'Abrir índice');
+      tocToggle.querySelector('i').className = `ph ph-${open ? 'x' : 'list'}`;
+    };
+    tocToggle.addEventListener('click', () => setToc(!tocNav.classList.contains('is-open')));
+    tocBackdrop.addEventListener('click', () => setToc(false));
+    tocNav.addEventListener('click', e => { if (e.target.closest('a')) setToc(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && tocNav.classList.contains('is-open')) { setToc(false); tocToggle.focus(); } });
   </script>
 </body>
 </html>

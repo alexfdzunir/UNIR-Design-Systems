@@ -1,6 +1,6 @@
 # UNIR Design Systems
 
-Librería Angular del design system PrimeOne: componentes PrimeNG 21 (licencia MIT) con los presets del DS y componentes propios de Proeduca (`prime-one-*`), conectados a Figma con Code Connect.
+Los sistemas de diseño de UNIR en código, conectados a Figma con Code Connect: PrimeOne, librería Angular con componentes PrimeNG 21 (licencia MIT), los presets del DS y componentes propios de Proeduca (`prime-one-*`), y AEM Portales, HTML con clases BEM, CSS y JavaScript sin dependencias para los portales en Adobe Experience Manager.
 
 ## Capturas
 

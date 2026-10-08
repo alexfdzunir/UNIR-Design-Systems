@@ -6,8 +6,10 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const config = JSON.parse(readFileSync(join(root, 'figma.config.json'), 'utf8'));
-const substitutions = Object.entries(config.codeConnect?.documentUrlSubstitutions ?? {});
+// URL placeholders of both Code Connect configs: `<PRIMEONE>` (figma.config.json) and `<AEM>` (figma.aem.config.json)
+const substitutions = ['figma.config.json', 'figma.aem.config.json'].flatMap((file) =>
+  Object.entries(JSON.parse(readFileSync(join(root, file), 'utf8')).codeConnect?.documentUrlSubstitutions ?? {}),
+);
 const componentsDir = join(root, 'src/components');
 
 const compact = (name) => name.replace(/[-_]/g, '').toLowerCase();

@@ -79,8 +79,9 @@ function toEntry(mod: Record<string, unknown>, figmaUrl: string | undefined, cod
     title,
     category: categoryDef?.id ?? CATEGORIES.filter((c) => c.ds === ds).at(-1)!.id,
     description: docs?.description?.component,
-    // PrimeOne takes it from Code Connect (`*.figma.ts`); AEM stories give it in `parameters.figmaUrl`
-    figmaUrl: figmaUrl ?? meta.parameters?.['figmaUrl'],
+    // A story's own `parameters.figmaUrl` wins (AEM stories set it, and a folder can hold several modules);
+    // otherwise the Code Connect template of the folder (`*.figma.ts`), as PrimeOne
+    figmaUrl: meta.parameters?.['figmaUrl'] ?? figmaUrl,
     codeImports,
     layout: meta.parameters?.['layout'] ?? 'padded',
     height: docs?.story?.height,

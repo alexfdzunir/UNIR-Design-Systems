@@ -1,12 +1,16 @@
-# PrimeOne DS
+# UNIR Design Systems
 
 Librería Angular del design system PrimeOne: componentes PrimeNG 21 (licencia MIT) con los presets del DS y componentes propios de Proeduca (`prime-one-*`), conectados a Figma con Code Connect.
 
 ## Capturas
 
-Explorador del DS (`npm run explorer`).
+Explorador de los sistemas de diseño (`npm run explorer`).
 
-![Home del explorador: cifras del DS y secciones del catálogo](docs/screenshots/home.png)
+![Home del explorador: elección entre PrimeOne y AEM Portales](docs/screenshots/home.png)
+
+| PrimeOne | AEM Portales |
+| --- | --- |
+| ![Home de PrimeOne: cifras del DS y secciones del catálogo](docs/screenshots/home-prime-one.png) | ![Home de AEM Portales: cifras del DS y secciones del catálogo](docs/screenshots/home-aem.png) |
 
 | Sección | Componente |
 | --- | --- |

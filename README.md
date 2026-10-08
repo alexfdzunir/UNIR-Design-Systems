@@ -97,3 +97,7 @@ El token necesita los scopes *Code Connect: Write* y *File content: Read* y acce
 ## Skills
 
 `skills/` reúne skills para Claude y Codex que trabajan con Figma y el sistema de diseño: auditoría de librerías, generación de componentes, documentación, sincronización de tokens, Figma a código, `DESIGN.md` para Open Design y arquitectura de variables. La tabla de lo que hace cada una y cómo instalarlas está en [skills/README.md](skills/README.md).
+
+## Agente
+
+[`AGENTS.md`](AGENTS.md) da a Claude Code, Codex y cualquier agente que lea ese fichero el contexto de los dos sistemas de diseño: dónde está cada cosa, cómo se hace un componente en cada uno, cómo se verifica en el explorador y cómo se publica Code Connect. `CLAUDE.md` solo lo importa (`@AGENTS.md`) para que Claude Code lo cargue aunque haya otro `CLAUDE.md` por encima del repo. Cómo se carga, qué sabe, cómo trabaja y cómo mantenerlo: [docs/agente.md](docs/agente.md).

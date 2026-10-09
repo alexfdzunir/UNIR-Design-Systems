@@ -1,0 +1,13 @@
+{
+  "name": "primeone-ds",
+  "description": "DS-Agent tooling of the UNIR design systems repo",
+  "owner": {
+    "name": "afsh4ck"
+  },
+  "plugins": [
+    {
+      "name": "ds-agent",
+      "source": "./"
+    }
+  ]
+}

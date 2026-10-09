@@ -26,6 +26,7 @@ Este repositorio alberga dos sistemas de diseño de Proeduca/UNIR y las herramie
 | `explorer/` | App Angular que enseña ambos sistemas (catálogo, componente real, panel de control, código, tokens, medidas) |
 | `scripts/generate-explorer-index.mjs` | Genera `explorer/src/app/stories-index.ts` a partir de las stories (no se edita a mano) |
 | `skills/` | Skills de Figma y design systems para Claude y Codex (ver abajo) |
+| `tools/ds-agent/` | Banner del DS-Agent al abrir sesión: mod de Claude Code en `claude/` (activado en `.claude/settings.json`, se prueba con `claude plugin test tools/ds-agent/claude`) y hook `SessionStart` de Codex en `codex/` (registrado en `.codex/hooks.json`) |
 | `reports/figma-audit/` | Informes de auditoría de la librería PrimeOne en Figma (Markdown y HTML) |
 | `figma.config.json`, `figma.aem.config.json` | Configuración de Code Connect de cada sistema |
 

@@ -1,0 +1,9 @@
+{
+  "name": "ds-agent",
+  "version": "0.1.0",
+  "description": "DS-Agent banner: animated connection check when a session opens in the PrimeOne-DS repo",
+  "author": {
+    "name": "afsh4ck"
+  },
+  "types": "./types/index.d.ts"
+}

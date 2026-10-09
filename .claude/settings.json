@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "primeone-ds": {
+      "source": {
+        "source": "directory",
+        "path": "./tools/ds-agent/claude"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "ds-agent@primeone-ds": true
+  }
+}

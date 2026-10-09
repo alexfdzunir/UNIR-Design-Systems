@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/tools/ds-agent/codex/session-start.mjs\"",
+            "statusMessage": "Conectando DS-Agent…",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

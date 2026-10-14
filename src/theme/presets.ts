@@ -218,10 +218,13 @@ const TIMELINE_CSS = `
 
 /**
  * Dialogs never touch the screen edges: at least 16px on each side (maximized ones aside). The `breakpoints` input
- * does not reach ConfirmDialog in PrimeNG 21 (its media rule targets another element id).
+ * does not reach ConfirmDialog in PrimeNG 21 (its media rule targets another element id). The footer text
+ * (Figma "Description Text") sits on the left and the buttons on the right, all vertically centred.
  */
 const DIALOG_CSS = `
 .p-dialog:not(.p-dialog-maximized) { max-width: calc(100% - 2rem); }
+.p-dialog-footer { align-items: center; }
+.po-dialog-footer-text { margin-inline-end: auto; font-size: 1rem; line-height: 1.5; }
 `;
 
 /** Terminal as a code console: code font, prompt in the primary colour, output muted and multi-line. */
@@ -300,7 +303,7 @@ const COMPONENTS = {
     root: { paddingY: '0.625rem', gap: '0.875rem' },
     colorScheme: { light: { icon: { color: '{primary.color}' } }, dark: { icon: { color: '{primary.color}' } } },
   },
-  dialog: { css: DIALOG_CSS },
+  dialog: { footer: { gap: '1rem' }, css: DIALOG_CSS },
   megamenu: { css: DANGER_CSS },
   menu: { css: DANGER_CSS },
   menubar: { css: DANGER_CSS },

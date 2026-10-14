@@ -9,6 +9,7 @@ export const P = {
   nestedCta: "↪ CTA",
   nestedCloseIcon: "↪ Close Icon",
   nestedContent: "↪ Content",
+  nestedDescriptionText: "↪ Description Text",
   nestedAllDayEvent2: "↪ All-day event 2",
   nestedAllDayEvent3: "↪ All-day event 3",
   nestedAllDayEvent4: "↪ All-day event 4",

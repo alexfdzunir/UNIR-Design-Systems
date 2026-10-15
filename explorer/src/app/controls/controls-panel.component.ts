@@ -167,6 +167,8 @@ function readAdvanced(): boolean {
                   buttonLayout="horizontal"
                   incrementButtonIcon="ph ph-plus"
                   decrementButtonIcon="ph ph-minus"
+                  [min]="item.control.min"
+                  [max]="item.control.max"
                   [ngModel]="numberValue(item.control)"
                   (ngModelChange)="state.setArg(item.control.name, $event ?? undefined)"
                 />
@@ -277,6 +279,8 @@ function readAdvanced(): boolean {
                             buttonLayout="horizontal"
                             incrementButtonIcon="ph ph-plus"
                             decrementButtonIcon="ph ph-minus"
+                            [min]="control.min"
+                            [max]="control.max"
                             [ngModel]="numberValue(control)"
                             (ngModelChange)="state.setArg(control.name, $event ?? undefined)"
                           />

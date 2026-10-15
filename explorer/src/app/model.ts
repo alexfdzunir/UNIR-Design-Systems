@@ -7,6 +7,9 @@ export interface ControlDef {
   kind: ControlKind;
   /** Values for select and inline-radio; `undefined` means "component default". */
   options?: unknown[];
+  /** Bounds of a number control, from `control: { type: 'number', min, max }`. */
+  min?: number;
+  max?: number;
   description?: string;
   /** Default documented by the component, if any. */
   defaultSummary?: string;

@@ -18,7 +18,7 @@ export function moduleMetadata(metadata: ModuleMetadata): StoryDecorator {
 }
 
 export interface ArgType {
-  control?: string | { type: string };
+  control?: string | { type: string; min?: number; max?: number };
   options?: unknown[];
   description?: string;
   action?: string;

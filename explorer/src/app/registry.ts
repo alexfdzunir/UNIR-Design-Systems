@@ -46,6 +46,8 @@ function toEntry(mod: Record<string, unknown>, figmaUrl: string | undefined, cod
         name,
         kind,
         options: argType.options,
+        min: typeof argType.control === 'object' ? argType.control?.min : undefined,
+        max: typeof argType.control === 'object' ? argType.control?.max : undefined,
         description: argType.description,
         defaultSummary: argType.table?.defaultValue?.summary,
         initial: meta.args?.[name],

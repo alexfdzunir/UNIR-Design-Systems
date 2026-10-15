@@ -3,6 +3,20 @@ import { Stepper, StepList, Step, StepPanels, StepPanel, StepItem } from 'primen
 import { Button } from 'primeng/button';
 import { PrimeOneStepListCenter } from './step-list-center';
 
+/** Figma's stepper-list has Item 1..8. */
+const MAX_STEPS = 8;
+
+const STEPS = [
+  { value: 1, label: 'Datos', content: 'Introduce tus datos personales.' },
+  { value: 2, label: 'Documentación', content: 'Adjunta la documentación requerida.' },
+  { value: 3, label: 'Confirmación', content: 'Revisa y confirma la solicitud.' },
+  { value: 4, label: 'Pago', content: 'Elige la forma de pago.' },
+  { value: 5, label: 'Matrícula', content: 'Formaliza la matrícula.' },
+  { value: 6, label: 'Acceso', content: 'Activa tu cuenta de acceso.' },
+  { value: 7, label: 'Bienvenida', content: 'Conoce el campus virtual.' },
+  { value: 8, label: 'Inicio', content: 'Comienza el curso.' },
+];
+
 const meta: Meta = {
   title: 'Panel/Stepper',
   decorators: [moduleMetadata({ imports: [Stepper, StepList, Step, StepPanels, StepPanel, StepItem, Button, PrimeOneStepListCenter] })],
@@ -12,20 +26,18 @@ const meta: Meta = {
   },
   args: {
     value: 1,
+    steps: 3,
     linear: false,
     vertical: false,
   },
   argTypes: {
-    value: { control: 'number', description: 'A model that can hold a numeric value or be undefined.', table: { defaultValue: { summary: 'undefined' } } },
+    value: { control: { type: 'number', min: 1, max: MAX_STEPS }, description: 'A model that can hold a numeric value or be undefined.', table: { defaultValue: { summary: 'undefined' } } },
+    steps: { control: { type: 'number', min: 1, max: MAX_STEPS }, description: 'Número de pasos (Item 1..8 en Figma).' },
     linear: { control: 'boolean', description: 'When enabled, steps can only be completed in order.' },
     vertical: { control: 'boolean', description: 'Orientación vertical (Orientation Vertical en Figma).' },
   },
   render: (args) => ({
-    props: { ...args, steps: [
-        { value: 1, label: 'Datos', content: 'Introduce tus datos personales.' },
-        { value: 2, label: 'Documentación', content: 'Adjunta la documentación requerida.' },
-        { value: 3, label: 'Confirmación', content: 'Revisa y confirma la solicitud.' },
-      ] },
+    props: { ...args, steps: STEPS.slice(0, Math.min(Math.max(1, Number(args['steps']) || 3), MAX_STEPS)) },
     template: `
       <p-stepper [(value)]="value" [linear]="linear">
         @if (vertical) {

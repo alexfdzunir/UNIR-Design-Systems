@@ -604,6 +604,7 @@ const CONTENT_NAMES: Record<string, string> = {
   size: 'Tamaño (px)',
   life: 'Duración (ms)',
   zoom: 'Zoom',
+  steps: 'Pasos',
 };
 
 /** Names that depend on the component. */

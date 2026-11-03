@@ -57,10 +57,12 @@ No inventes el comportamiento esperado de una interacción que Figma no define. 
 Cuando el usuario pida documentación en Figma:
 
 1. Inspecciona primero el nodo de destino y conserva cualquier edición manual ya presente.
-2. Crea o actualiza una sección de QA separada, con un bloque por incidencia: identificador, severidad, resumen, Figma a la izquierda y producción a la derecha.
-3. Construye las secciones nuevas con auto layout: tablero en vertical, tarjetas en vertical y comparativas en horizontal. Usa padding y espaciado del auto layout; las columnas de referencia y producción deben crecer o ajustarse dentro de la fila, en lugar de posicionarse con coordenadas. Solo las flechas o anotaciones superpuestas pueden usar posicionamiento absoluto.
-4. Sube las capturas de producción como assets y usa los screenshots/frames de Figma como referencia. No sustituyas componentes ni frames de diseño aprobados.
-5. Vuelve a leer o capturar el tablero resultante y comprueba que conserva la estructura al redimensionar una tarjeta. Si la sesión de Figma es larga, pide al usuario que confirme visualmente cada bloque de escritura antes de continuar.
+2. Lee la [guía de comentarios para desarrollo](references/developer-comments.md) antes de redactar anotaciones o filas de Notion.
+3. Crea o actualiza una sección de QA separada. En su cabecera incluye el título, el alcance y dos accesos visuales: `Ver producción`, que enlaza a la URL auditada, y `Abrir Notion`, que enlaza al registro cuando exista. Hazlos enlaces clicables reales cuando la herramienta lo permita, con icono de enlace externo y apariencia de botón o chip con contraste, borde/fondo, padding y estado de enlace; no muestres URLs sin formato. Omite `Abrir Notion` cuando no haya registro.
+4. Añade un bloque por incidencia: identificador, severidad, resumen, Figma a la izquierda y producción a la derecha. Todos los textos nuevos del tablero, las tarjetas, la cabecera y las anotaciones usan `Proeduca Sans`; reutiliza el estilo del fichero si ya existe y no lo sustituyas por una fuente de sistema.
+5. Construye todos los contenedores nuevos con auto layout: tablero y tarjetas en vertical; cabecera, comparativas, filas y anotaciones en horizontal cuando agrupen elementos en paralelo. Usa padding, gap y reglas de crecimiento del auto layout; las columnas de referencia y producción deben ajustarse dentro de su fila, en lugar de posicionarse con coordenadas. Solo las flechas o anotaciones realmente superpuestas pueden usar posicionamiento absoluto.
+6. Sube las capturas de producción como assets y usa los screenshots/frames de Figma como referencia. Añade junto a cada hallazgo una anotación breve etiquetada `Cambio`, con el texto de corrección de la guía. No sustituyas componentes ni frames de diseño aprobados.
+7. Vuelve a leer o capturar el tablero resultante y comprueba que conserva `Proeduca Sans`, los enlaces visibles de cabecera y su estructura al redimensionar una tarjeta. Si la sesión de Figma es larga, pide al usuario que confirme visualmente cada bloque de escritura antes de continuar.
 
 ## Registro en Notion
 
@@ -68,7 +70,7 @@ Lee [el esquema de Notion](references/notion-qa-schema.md) antes de escribir.
 
 - Con una URL de Notion: inspecciona su tabla y sus opciones de select antes de crear filas. Crea una página/fila por incidencia y completa todas las columnas requeridas; no dejes vacíos `Link Issue`, `Prioridad` ni `Tipo`.
 - Sin URL de Notion: crea una página de QA y una tabla siguiendo el esquema. Comunica al usuario la URL creada.
-- Escribe la evidencia y los pasos en `Comentarios Producto`, incluso si los detalles completos viven dentro de la página de la incidencia.
+- Escribe en `Comentarios Producto` el mismo mensaje de corrección simple que aparece en Figma, siguiendo la [guía de comentarios para desarrollo](references/developer-comments.md). Incluye ruta, viewport y evidencia en una segunda frase breve; evita que la investigación técnica sustituya a la instrucción de corrección.
 - Tras crear o editar, recarga la página y verifica que todas las incidencias persisten. Espera a que Notion guarde antes de cerrar una página recién creada.
 
 ## Cierre

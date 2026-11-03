@@ -10,7 +10,7 @@ Usa este esquema tanto al crear una tabla nueva como al verificar una tabla exis
 | `Tipo` | Select | Usa las opciones de la tabla. En una tabla creada por la skill: `Visual`, `Funcional`, `Accesibilidad`, `Contenido`, `Rendimiento`, `Metadatos/SEO`. |
 | `Estado` | Select | Usa el flujo existente. En una tabla creada por la skill: `Backlog`, `En curso`, `Resuelto`, `No reproducible`; una incidencia nueva empieza en `Backlog`. |
 | `Fecha creación` | Fecha de creación o fecha | Nunca dejar vacía. Configúrala como propiedad de creación automática al crear una tabla y verifica que queda poblada. Si la tabla existente usa una fecha manual, asigna la fecha actual. |
-| `Comentarios Producto` | Texto enriquecido | Incluye ruta y viewport, pasos, esperado, observado, impacto y dónde está la evidencia. |
+| `Comentarios Producto` | Texto enriquecido | Abre con una instrucción corta y accionable para desarrollo. Después añade ruta, viewport y evidencia en una frase breve. Sigue la [guía de comentarios para desarrollo](developer-comments.md). |
 
 Para crear una tabla nueva, nómbrala `QA <nombre del producto> <mes año>` y crea al menos esas columnas. Antes de cerrar el QA, comprueba que cada fila tiene valor en `Link Issue`, `Prioridad`, `Tipo`, `Estado`, `Fecha creación` y `Comentarios Producto`; el cuerpo de la página no sustituye el comentario de la tabla.
 

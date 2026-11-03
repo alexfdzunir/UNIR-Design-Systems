@@ -58,8 +58,9 @@ Cuando el usuario pida documentación en Figma:
 
 1. Inspecciona primero el nodo de destino y conserva cualquier edición manual ya presente.
 2. Crea o actualiza una sección de QA separada, con un bloque por incidencia: identificador, severidad, resumen, Figma a la izquierda y producción a la derecha.
-3. Sube las capturas de producción como assets y usa los screenshots/frames de Figma como referencia. No sustituyas componentes ni frames de diseño aprobados.
-4. Vuelve a leer o capturar el tablero resultante. Si la sesión de Figma es larga, pide al usuario que confirme visualmente cada bloque de escritura antes de continuar.
+3. Construye las secciones nuevas con auto layout: tablero en vertical, tarjetas en vertical y comparativas en horizontal. Usa padding y espaciado del auto layout; las columnas de referencia y producción deben crecer o ajustarse dentro de la fila, en lugar de posicionarse con coordenadas. Solo las flechas o anotaciones superpuestas pueden usar posicionamiento absoluto.
+4. Sube las capturas de producción como assets y usa los screenshots/frames de Figma como referencia. No sustituyas componentes ni frames de diseño aprobados.
+5. Vuelve a leer o capturar el tablero resultante y comprueba que conserva la estructura al redimensionar una tarjeta. Si la sesión de Figma es larga, pide al usuario que confirme visualmente cada bloque de escritura antes de continuar.
 
 ## Registro en Notion
 

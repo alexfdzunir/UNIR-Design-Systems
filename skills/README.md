@@ -11,6 +11,7 @@ Skills para agentes de código (Claude y Codex) que trabajan con Figma y con el 
 | [`figma-to-code`](figma-to-code/SKILL.md) | Convierte componentes de Figma en código listo para producción (React, Vue, HTML/CSS), con props desde las variantes, tokens como variables y Code Connect. |
 | [`figma-to-open-design`](figma-to-open-design/SKILL.md) | Convierte un fichero o componente de Figma en un `DESIGN.md` portable compatible con Open Design, para que cualquier agente use el sistema. |
 | [`variable-architect`](variable-architect/SKILL.md) | Diseña la arquitectura de variables de Figma: colecciones, modos claro/oscuro o multimarca, aliases, carga desde tokens JSON y migración de estilos a variables. |
+| [`web-production-qa`](web-production-qa/SKILL.md) | Audita una web en producción contra sus últimos diseños de Figma en escritorio, móvil y estados interactivos; documenta incidencias verificadas en Notion y, si se solicita, en un lienzo de QA de Figma. |
 
 Las skills que leen o escriben en Figma necesitan el servidor MCP de Figma conectado en el agente.
 

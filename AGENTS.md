@@ -108,6 +108,7 @@ Cada carpeta tiene un `SKILL.md` que se puede leer y seguir sin instalar nada. �
 | Convertir un componente de Figma en código con props y Code Connect | `skills/figma-to-code/SKILL.md` |
 | Generar un `DESIGN.md` portable (Open Design) desde Figma | `skills/figma-to-open-design/SKILL.md` |
 | Diseñar colecciones, modos y aliases de variables en Figma | `skills/variable-architect/SKILL.md` |
+| Hacer QA de una web de producción contra Figma y registrar incidencias en Notion/Figma | `skills/web-production-qa/SKILL.md` |
 
 Las auditorías se guardan en `reports/figma-audit/AAAA-MM-DD-<sistema>.md` y `.html` (plantilla `skills/component-audit/report-template.html`); una reauditoría del mismo día sobrescribe la anterior.
 

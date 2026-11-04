@@ -21,7 +21,44 @@ Explorador de los sistemas de diseño (`npm run explorer`).
 ## Requisitos
 
 - Node.js `^20.19.0`, `^22.12.0` o `>=24` (requisito de Angular 21)
-- `npm install`
+
+## Empezar en cinco minutos
+
+En una terminal, descarga el repositorio e instala sus dependencias:
+
+```bash
+git clone https://github.com/alexfdzunir/UNIR-Design-Systems.git
+cd UNIR-Design-Systems
+npm install
+```
+
+Arranca el explorador y abre la URL que muestra la terminal (normalmente [http://localhost:4300](http://localhost:4300)):
+
+```bash
+npm run explorer
+```
+
+El comando genera el índice de stories automáticamente antes de iniciar Angular. Déjalo abierto mientras uses el explorador; para detenerlo, pulsa `Ctrl+C`.
+
+### Instalar todas las skills
+
+Desde la raíz del repositorio, copia todas las skills para que estén disponibles en cualquier proyecto. Después reinicia la sesión del agente.
+
+**Codex**
+
+```bash
+mkdir -p ~/.codex/skills
+for skill in skills/*/; do cp -R "${skill%/}" ~/.codex/skills/; done
+```
+
+**Claude Code**
+
+```bash
+mkdir -p ~/.claude/skills
+for skill in skills/*/; do cp -R "${skill%/}" ~/.claude/skills/; done
+```
+
+Si ya tenías estas skills instaladas, repite el comando después de actualizar el repositorio (`git pull`) para obtener la versión más reciente. Para instalar solo una, sustituye el bucle por la carpeta concreta, por ejemplo `cp -R skills/web-production-qa ~/.codex/skills/`.
 
 ## Comandos
 

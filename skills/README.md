@@ -44,11 +44,11 @@ cd skills && for s in */; do zip -qr "${s%/}.zip" "$s"; done
 
 ## Instalación en Codex
 
-Para todos tus proyectos, copia las carpetas a `~/.agents/skills/`:
+Para todos tus proyectos, copia las carpetas a `~/.codex/skills/`:
 
 ```bash
-mkdir -p ~/.agents/skills
-for s in skills/*/; do cp -R "${s%/}" ~/.agents/skills/; done
+mkdir -p ~/.codex/skills
+for s in skills/*/; do cp -R "${s%/}" ~/.codex/skills/; done
 ```
 
-Solo para un repositorio, cópialas a `.agents/skills/` en la raíz de ese repositorio. Codex las carga al arrancar en esa carpeta ([documentación de skills de Codex](https://developers.openai.com/codex/skills)).
+Reinicia Codex después de copiarlas. Solo para un repositorio, cópialas a `.agents/skills/` en la raíz de ese repositorio. Codex las carga al arrancar en esa carpeta ([documentación de skills de Codex](https://developers.openai.com/codex/skills)).

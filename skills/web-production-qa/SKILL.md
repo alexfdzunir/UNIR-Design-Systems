@@ -13,15 +13,16 @@ Una diferencia es una incidencia solo tras comprobarla en producción y en la re
 
 ## Inicio
 
-En el primer mensaje de una ejecución nueva, pedir juntas estas tres entradas; no volver a preguntar por las que ya estén en el contexto:
+En el primer mensaje de una ejecución nueva, pedir juntas estas cuatro entradas; no volver a preguntar por las que ya estén en el contexto:
 
 1. URL de producción que se va a evaluar.
 2. URL de Figma con los últimos diseños.
-3. URL de Notion para el registro, opcional.
+3. URL de Figma de la página o lienzo donde se documentará el QA.
+4. URL de Notion para el registro, opcional.
 
-Si no hay URL de Notion, comunicar que se creará una página de QA con la tabla indicada en [el esquema de Notion](references/notion-qa-schema.md). Si no existe una sesión de navegador autenticada, pedir al usuario que la abra antes de intentar escribir.
+Si no hay una página de QA en Figma, preguntar dónde crear la sección de evidencia antes de evaluar. Si no hay URL de Notion, comunicar que se creará una página de QA con la tabla indicada en [el esquema de Notion](references/notion-qa-schema.md). Si no existe una sesión de navegador autenticada, pedir al usuario que la abra antes de intentar escribir.
 
-Antes de escribir fuera del entorno local, confirmar el destino: la página/base de Notion y, si procede, el lienzo o página de QA de Figma. No modificar las pantallas fuente de Figma; las evidencias viven en un lienzo o sección de QA separado.
+Antes de escribir fuera del entorno local, confirmar el destino: primero el lienzo o página de QA de Figma y después, si procede, la página/base de Notion. No modificar las pantallas fuente de Figma; las evidencias viven en un lienzo o sección de QA separado.
 
 ## Matriz de cobertura
 
